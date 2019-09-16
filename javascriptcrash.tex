@@ -1,0 +1,982 @@
+\documentclass[trans,compress,xcolor=table]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{multicol}
+
+\mode<article>
+{
+  \usepackage{fullpage}
+  \usepackage{pgf}
+  \usepackage{hyperref}
+}
+
+\mode<presentation>
+{
+  \usetheme{Antibes}
+  \usecolortheme[rgb={0.9,0.4,0.1}]{structure}
+
+  \setbeamercovered{transparent}
+}
+
+
+\title{Sofware Development with Scripting Languages:\\Browser Side Scripting}
+\author{Onur Tolga Şehitoğlu}
+\institute{Computer Engineering,METU}
+\subject{Browser Side Scripting}
+\date{2 January 2015}
+
+\lstdefinelanguage{javascript}{
+	morekeywords={
+		break,const,continue,delete,do,while,export,for,in,function,
+		if,else,import,in,instanceOf,label,let,new,return,switch,this,
+		throw,try,catch,typeof,var,void,with,yield,class,extends
+	},
+	sensitive=false,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+	morestring=[d]'
+}
+		      
+
+\begin{document}
+\lstset{language=javascript,tabsize=4,
+        basicstyle=\scriptsize\ttfamily,
+        keywordstyle=\color{blue!50!black}\bfseries,
+        identifierstyle=\color{blue!60!green},
+        stringstyle=\color{red!70!green},
+	commentstyle=\color{blue!30!white}\itshape,
+        showstringspaces=true, escapeinside=`',columns=flexible, keepspaces=true}
+
+\setbeamercolor{pexample}{bg=orange!5!white,fg=black}%
+
+
+ \frame{\maketitle}
+\begin{frame}
+\begin{multicols}{2}
+\tableofcontents
+\end{multicols}
+\end{frame}
+
+\section{Javascript Syntax}
+\begin{frame}
+\frametitle{Javascript Syntax}
+\begin{itemize}
+\item Standard name is ECMAscript
+\item C alike
+\item Semicolon \lstinline!;! is optional for multiple lines
+\item Interpreter is embedded on browser
+\item Code can be embedded in \structure{HTML} with \lstinline!<script>!
+	tag.
+\item Browsers provide a \structure{Javascript} console
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+<head>
+<!-- include a script file from URL -->
+<script src="/libs/jquery/1.7.1/jquery.min.js">
+</script>
+</head>
+<body>
+<script>
+var msg = 'hello'; var target=' world'
+alert(msg + target) {
+}
+</script>
+\end{lstlisting}
+\end{frame}
+
+\section{Values and Types}
+\begin{frame}[fragile]
+\frametitle{Values and Types}
+\begin{itemize}
+\item Very minimal set of types: \lstinline!string, number, object!
+\item Literals \lstinline!'Hello',"world", 3.454, 7, {name:'value',id:5}!
+\item Type conversion is done as long as possible\\
+\lstinline!a= "1"+4 ; a++ ; // a is 15!
+\item Objects are created on the fly, in a way similar 
+	to \structure{Python} 
+	dictionaries. Object method can access instance with \lstinline!this!.
+\begin{lstlisting}
+var counter = { val: 0 , 
+                get: function () {return this.val},
+                incr: function() { this.val++}}
+
+counter.get()
+counter.incr()
+\end{lstlisting}
+\item No type enforcement on objects. 
+\end{itemize}
+\end{frame}
+
+\section{Objects and Arrays}
+\begin{frame}
+\frametitle{Objects and Arrays}
+\begin{itemize}
+\item Object members \lstinline!student = \{ name: 'ali' \}! can be accessed in two ways:
+\begin{itemize}
+	\item \lstinline!student.name!
+	\item \lstinline[]!student['name']!
+\end{itemize}
+\item \lstinline!Array! is a builtin object type that implements
+	integer indexed elements.\\
+	\lstinline[]!a = [7,18,23] ; a[0] = a[1] + a[2]!
+\item Some array methods work in place, modifies array:\\
+	\lstinline!a.sort() ; a.reverse()! \\
+	\lstinline!a.push('hello') ; a.pop() ; a.unshift('hello') ; a.shift()!\\
+\item Some returns new values:\\
+	\lstinline!a.indexOf(3) ; a.join(":") ; a.slice(2,4); a.length!  \\
+	\lstinline!a.filter(boolfunc) ; a.map(func); a.concat([3,4,5]) ; !\\
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Manipulating Objects}
+\begin{itemize}
+\item Arbitrary members/methods can be added by assignments:\\
+	\lstinline!student = {} ; student.name='Ali'!\\
+	\lstinline!student['no'] = 444 // { name: 'Ali', no: 444 }!
+\item Members can be deleted:\\
+	\lstinline!delete student.name // { no: 444} !
+\item Array elements can be deleted using 
+	\lstinline!splice(start,num)!:\\
+	\lstinline!a.splice(5,2)  // delete a[5], a[6]!
+\item Assignment is by reference. Copy can be done member by member.
+\item Testing for a member:\\
+	\lstinline!if ( student.hasOwnProperty('name'))! or simply:\\
+	\lstinline!if (student.name)!
+\end{itemize}
+\end{frame}
+
+\section{Operators}
+\begin{frame}
+\frametitle{Operators}
+\begin{itemize}
+\item
+Very similar to C. Most operators including  increments, arithmetic assignments and conditional expression
+are works similar to C.
+\item `\lstinline!+!' is concatenation unless both operands are numbers
+\item \lstinline!/! is real division. \lstinline!Math.floor/celing/round()!
+\item Numbers and strings are also objects. They have some
+	conversion operators
+\item \lstinline!Math! object contains more arithmetic functions.
+\item \lstinline!/regexp/! creates a regular expression object.\\
+	\lstinline!/^[0-9]+$/.test(mystring)! returns \lstinline!true!
+	or \lstinline!false!, match result of regular expression 
+
+\end{itemize}
+
+\end{frame}
+
+
+\section{Conditionals and Loops}
+\begin{frame}[fragile]
+\frametitle{Conditionals and Loops}
+Similar to C:
+\begin{itemize}
+\item \lstinline!if (cond) else if (cond2) else (cond3);!
+\item \lstinline!switch (val) { case num1:...; break; case "str1":...;...}!
+\item \lstinline!while (cond) { ... }!
+\item \lstinline!do { ... } while (cond)!
+\item \lstinline!for (i=0; i < n; i++) { ... }!
+\item Definite iteration on objects (\lstinline!a=[1,4,6,10]; b={x:3,y:4,z:5}!)\\
+\lstinline!for (i in a) { ...  a[i] ...} //i=0,1,2,3!\\
+\lstinline!for (i in b) { ...  a[i] ...} //i='x','y','z'!\\
+\end{itemize}
+\end{frame}
+
+
+\section{Exceptions}
+\begin{frame}[fragile]
+\frametitle{Exceptions}
+\begin{beamercolorbox}{pexample}
+\begin{lstlisting}
+try {
+    ...
+} catch (excp) {
+    ...
+} finally {
+    ... // optional, executed always
+}
+\end{lstlisting}
+\end{beamercolorbox}
+\begin{itemize}
+\item \lstinline!throw! statement can be used to raise an exception
+\item If not handled exceptions stop current script execution
+\end{itemize}
+\end{frame}
+
+\section{Defining Functions}
+\begin{frame}[fragile]
+\frametitle{Defining Functions}
+\begin{beamercolorbox}{pexample}
+\begin{lstlisting}
+function f(param1, param2, param3)  {
+    var x = ...
+
+    if (param3 == undefined) param3 = 'default value'
+    ...
+   return val
+}
+// lambda like definition possible
+a = [1,2,3,4]
+b = a.map(function (x) { return x*x }   // b= [1,4,9,16]
+// following two are equivalent:
+function add(x,y) { return x+y } 
+var add = function (x,y) { return x+y }
+\end{lstlisting}
+\end{beamercolorbox}
+\end{frame}
+
+
+\section{Variable Scope and Lifetime}
+\begin{frame}[fragile]
+\frametitle{Variable Scope and Lifetime}
+\begin{itemize}
+\item Variables are global by default, regardless of their
+	position of initialization 
+\item \lstinline!var! is used to create a variable in
+	local scope.\\ \lstinline!var x; var y = 5! .\\
+	\lstinline!for (var i = 0; i < n ; i++) ...! \\
+\item Using always \lstinline!var! is a good practice. Otherwise
+	using global scope causes confusions, especially in
+	recursion.
+\item Variables used by an object can be hidden using scope:
+\begin{lstlisting}
+function counter() {
+    var val = 0; // hidden inside the function
+    return { incr: function () { val++},
+             get: function () { return val} }
+}
+a=counter()
+a.incr() ;     console.log(a.get())
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Similar \structure{closures} can be defined.
+\begin{lstlisting}
+function multiplyby(x) {
+    return function (y) {
+        return x*y;
+    }
+}
+twice = multiplyby(2);
+twice(4); // will return 8
+function sortby(field) {  
+        function compare(a,b) { 
+                return (a[field] < b[field])? -1 : 1
+        }  
+        return function (arr) { 
+                arr.sort(compare)
+        }
+}
+rlist = [{name:'z',no:43},{name:'a',no:31},{name:'c',no:11}]
+namesort = sortby('name')  // a new function sorts by 'name'
+nosort = sortby('no')	   // a new function sorts by 'no'
+namesort(rlist)
+nosort(rlist)
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\section{Assignment Semantics}
+\begin{frame}
+\frametitle{Assignment Semantics}
+\begin{itemize}
+\item Share semantics
+\item Assignment copies reference, not data
+\item Object assignment creates two variables denoting
+	same object
+\item Primitive values copied, objects shared (like Java)
+\item Parameters pass by value for primitives, reference for
+	objects
+\item Copying requires special copy functions
+\end{itemize}
+\end{frame}
+
+\section{Objects and Classes}
+\begin{frame}[fragile]
+\begin{itemize}
+\item Objects can be created on the fly by \lstinline!{...}!
+\item \lstinline!this! denotes the current object inside
+	the function members.\\
+	\lstinline!{c:0, incr: function() { this.c++}}!
+\item Classes can be created by class functions updating members
+	of \lstinline!this! and returning \lstinline!this!.
+\item Updates on \lstinline!this! updates a function prototype
+	and when \lstinline!return this! is executed this
+	prototype instance is returned.
+\item New instances can be created as \lstinline!new classfunction()!.
+\item Define a binary search tree class \lstinline!BSTree! such that:
+\begin{lstlisting}
+bst = new BSTree()
+f=[["orange","orange"],["apple","red"],["banana","yellow"],
+   ["watermelon","green"],["strawberry","pink"]])
+for (i in f) 	bst.insert(f[i][0], f[i][1])
+color = bst.get("apple")
+bst.forEach(function (n) { console.log(n.key+":"+n.value) })
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+\begin{lstlisting}
+function BSTree() {
+    var root = undefined;	// local scope, private 
+    this.insert = function (key, value) {
+        if (root == undefined) {
+            root = { node: {key: key , value: value},
+                     left: new BSTree(), right: new BSTree() }
+        } else if ( key < root.node.key ) 
+            root.left.insert(key, value)
+        else if ( key > root.node.key )
+            root.right.insert(key, value)
+        else root.node.value = value;                     } 
+    this.get = function (key) {
+        if (root == undefined) return undefined
+        else if (key < root.node.key) return root.left.get(key)
+        else if (key > root.node.key) return root.right.get(key)
+        else return root.node.value                      }
+    this.forEach = function (func) {
+        if (root == undefined)   return
+        root.left.forEach(func)
+        func(root.node)      // apply function to node content
+        root.right.forEach(func)                        }
+}
+\end{lstlisting}
+\end{frame}
+
+\subsection{Function Prototypes and Inheritance}
+\begin{frame}[fragile]
+\frametitle{Function Prototype}
+\begin{itemize}
+\item Repeating function definitions in each instance is inefficient.
+\item Javascript binding searches \lstinline!functionname.prototype! object
+for missing members for the object. So that a single copy per function/class maintained
+\begin{lstlisting}
+function Counter() { this.value = 0 }
+
+Counter.prototype.get = function () { return this.value }
+Counter.prototype.increment = function () { this.value++ }
+
+c = new Counter() ; d = new Counter() ; e = new Counter()
+c.incr()
+console.log(c.get())
+\end{lstlisting}
+\item \lstinline!c,d,e!  shares same prototype object of \lstinline!Counter!.
+\item \alert{prototype modifications after construction of an object affects the object}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\lstinline!BSTree! class rewritten with prototype
+\begin{lstlisting}
+function BSTree() {
+    this.node = undefined;	
+}
+BSTree.prototype.insert = function (key, value) {
+    if (this.node == undefined) {
+        this.node = {key: key , value: value}
+        this.left = new BSTree(); this.right= new BSTree()
+    } else if ( key < this.node.key ) 
+        this.left.insert(key, value)
+    else if ( key > this.node.key )
+        this.right.insert(key, value)
+    else this.node.value = value;                     } 
+BSTree.prototype.get = function (key) {
+    if (this.node == undefined) return undefined
+    else if (key < this.node.key) return this.left.get(key)
+    else if (key > this.node.key) return this.right.get(key)
+    else return this.node.value                      }
+BSTree.prototype.forEach = function (func) {
+    if (this.node == undefined)   return
+    this.left.forEach(func)
+    func(this.node)      // apply function to node content
+    this.right.forEach(func)                        }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Inheritance}
+\begin{itemize}
+\item Prototypes can be chained for inheritance. \lstinline!Object.create(protobject)!
+Creates an object with prototype \lstinline!protobject!. If you set prototype of
+\lstinline!B! as an object with same prototype with \lstinline!A!, bindings of \lstinline!B! will be chained to \lstinline!A!, results in inheritance.
+\end{itemize}
+\begin{lstlisting}
+function Shape(x, y) { this.x = x ; this.y = y} 
+Shape.prototype.move = function (x,y) { 
+	this.draw('background'); this.x = x; this.y = y;
+	this.draw('foreground') }
+
+function Circle(x, y, r) { 
+	Shape.apply(this,[x,y]); this.r = r   // Apply Shape constructor to this
+}
+Circle.prototype = Object.create(Shape.prototype)	// chain prototypes
+Circle.prototype.constructor = Circle
+Circle.prototype.draw = function (color) {
+  console.log('drawing circle at', this.x, this.y, this.r, 'in', color)}
+
+c = new Circle(10,10,5); c.move(30,20)
+\end{lstlisting}
+\end{frame}
+
+\subsection{EcmaScript6 class}
+\begin{frame}[fragile]
+\begin{itemize}
+\item Since EcmaScript 6 (2016) \lstinline!class! definitions are implemented as
+syntactic sugar (maps code to old style prototype definitions)
+\end{itemize}
+\begin{lstlisting}
+class Shape {
+	constructor(x,y) { this.x = x; this.y = y}
+    move(x,y) {  this.draw('background'); this.x = x; this.y =y ; 
+				 this.draw('foreground')
+	}
+}
+class Circle extends Shape {
+	constructor(x,y,r) { super(x,y); this.r = r}
+	draw(color) { 
+	  console.log('drawing circle at', this.x, this.y, this.r, 'in', color)
+	}
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\lstinline!BSTree! class with new syntax
+\begin{lstlisting}
+class BSTree {
+    constructor() { this.node = undefined}
+	insert(key, value) {
+    	if (this.node == undefined) {
+        	this.node = {key: key , value: value}
+        	this.left = new BSTree(); this.right= new BSTree()
+    	} else if ( key < this.node.key ) this.left.insert(key, value)
+    	else if ( key > this.node.key ) this.right.insert(key, value)
+    	else this.node.value = value;                     
+	}
+	get (key) {
+    	if (this.node == undefined) return undefined
+    	else if (key < this.node.key) return this.left.get(key)
+    	else if (key > this.node.key) return this.right.get(key)
+    	else return this.node.value                     
+	}
+	forEach (func) {
+    	if (this.node == undefined)   return
+    	this.left.forEach(func)
+    	func(this.node)      // apply function to node content
+    	this.right.forEach(func)
+	}
+}
+\end{lstlisting}
+\end{frame}
+
+\section{Browser Objects}
+\begin{frame}[fragile]
+\frametitle{Browser Objects}
+\begin{itemize}
+\item \lstinline!window!: an interface to browser. Loading a new page, etc.
+\item \lstinline!document!: an interface to current document. Document Object Model members.
+\item \lstinline!console!: Browser's Javascript console. 
+\lstinline!console.log(message)! can be used to write debugging 
+outputs on console.
+\item \lstinline!document! can be used to access and update current
+web page content dynamically.
+\end{itemize}
+\end{frame}
+
+\subsection*{document Object}
+\begin{frame}[fragile]
+Most important members of \lstinline!document! are:
+\begin{itemize}
+\item \lstinline!document.head! : Header, \lstinline!<head>! element
+	of current page.
+\item \lstinline!document.body! : Body, \lstinline!<body>! element
+\item \lstinline!document.forms! : list of \lstinline!<form>! elements in this document
+\item \lstinline!document.title! : Page title.
+\item \lstinline!document.cookie!: Cookies of current page.
+\item \lstinline!document.links! : List of links of the document (as \lstinline!<a>! elements).
+\item \lstinline!document.getElementById!: searches and returns 
+the element with given \lstinline!id=...! attribute in the document.
+\item \lstinline!document.getElementsByClassName! 
+\lstinline!.getElementsByTagName!: searches and returns all elements with given \lstinline!class=...! attribute and given HTML tag respectively.
+\item
+\lstinline!document.children[0]!: Top element, \lstinline!<html>! of the document.
+\end{itemize}
+\end{frame}
+
+\subsection*{DOM Elements}
+\begin{frame}[fragile]
+An HTML document contains nested elements. Top element is
+\lstinline!<html>!. DOM element is a tree like representation
+of document structure.
+A DOM node named \lstinline!el! has the following members:
+\begin{itemize}
+\item \lstinline!el.children! : List of child HTML elements
+	nested in this element. All \lstinline!<...></...>! elements
+	that are direct child of \lstinline!el!.
+\item \lstinline!el.childNodes!: List of child nodes including
+	HTML elements and text.
+\item \lstinline!el.nodeType!: Type of the node, 1 for element, 2 for attribute, 3 for text and 8 for comment node.
+\item \lstinline!el.getAttribute(attr)!: returns attribute value for a
+	given attribute. For example if an image element, \lstinline!el.getAttribute('src')! will give image URL.
+\item \lstinline!el.id!: Element id by \lstinline!id="..."! attribute.
+\item \lstinline!el.className!: element class by \lstinline!class="..."! attribute
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item \lstinline!el.innerHTML!: HTML text content enclosed
+	by element. Can be updated.
+\item \lstinline!el.outerHTML!: HTML text content including
+	the element. Can be updated. i.e. assigning it to \lstinline!''!
+	deletes the element.
+\item \lstinline!el.attributes!: Object to attributes. Attributes
+	can be modified, inserted, removed.
+\item \lstinline!el.setAttribute('border','1')!:
+	sets an attribute of the element \\
+\item \lstinline!el.removeAttribute('border')!:
+	remove an attribute of the element \\
+\item \lstinline!el.insertBefore(newel, child)!: 
+	inserts an element as a child, before the child element.\\
+	\lstinline!el.inserBefore(newel, el.children[0])! inserts
+	it as the first child.
+\item \lstinline!el.appendChild(newel)!:
+	add element as the last child of the element.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\structure{Example:}
+Add a \lstinline!<ul>! element to document at the end of
+the document body:
+\begin{lstlisting}
+var li1 = document.createElement("LI")
+var li2 = document.createElement("LI")
+var li3 = document.createElement("LI")
+li1.appendChild(document.createTextNode("apple"))
+li2.appendChild(document.createTextNode("banana"))
+li3.appendChild(document.createTextNode("orange"))
+var ul = document.createElement("UL")
+ul.appendChild(l1)
+ul.appendChild(l2)
+ul.appendChild(l2)
+document.body.appendChild(ul)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\structure{Example:}
+Recursively traverse all elements and log the tag name and
+attributes:
+\begin{lstlisting}
+function traverse(el) {
+    var str = el.tagName
+    var attr = []
+    if (el.attributes)
+        for (var i=0 ; i < el.attributes.length; i++)
+            attr.push(el.attributes[i].name + ":" + 
+                    el.attributes[i].value)
+    console.log(str + "[" + attr.join(",") + "]")
+    // recurse to children
+    if (el.children)
+        for (var i=0; i < el.children.length ; i++)
+            traverse(el.children[i])
+}
+traverse(document.body)
+\end{lstlisting}
+\end{frame}
+
+\subsection*{DOM Actions}
+\begin{frame}[fragile]
+\frametitle{DOM Actions}
+\begin{itemize}
+\item HTML elements can have mouse, keyboard or other
+browsers events handler functions.
+\item Either defined as HTML attribute or set later on DOM:\\
+	\lstinline!<img .. onclick="JS code here">!\\
+	\lstinline!el.addEventListener("onclick" , function () { ... })!
+\item Multiple event listeners can be added and remove on DOM:\\
+	\lstinline!el.removeEventListener("onclick" , function () { ... })!
+\item
+\begin{itemize}
+\item \lstinline!onclick!: mouse click
+\item \lstinline!ondblclick!: mouse double click
+\item \lstinline!onmouseover!: mouse pointer is over
+\item \lstinline!onkeypress!: keyboard key pressed (event object paramater)
+\item \lstinline!onbeforeload!: when object starts to be loaded
+\item \lstinline!onload!: when object is loaded
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Events for form elements:
+\begin{itemize}
+\item \lstinline!onchange!: when form element content changed
+\item \lstinline!onselect!: when form element is selected
+\item \lstinline!onfocus!: when form element gets focus
+\item \lstinline!onblur!: when form element loses focus
+\item \lstinline!onsubmit!: when form is submitted. Function
+	should return \lstinline!true! if default action (submit)
+	should follow. Calling \lstinline!el.submit()! will
+	explicitly submit the form data.
+\end{itemize}
+\item Form data can be validated through these events. Form elements
+	give access to input elements with their names.\\
+	\lstinline!document.forms[0].surname! gives element:\\
+	\lstinline!<input ... name="surname"...>! of the first form.
+\item Keyboard events get an event object containing \lstinline!keyCode, ctrlKey, shiftKey, AltKey! fields.
+\item Mouse events get an event object containing \lstinline!button, clientX, clientY! fields. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+Form data validation example:
+\begin{lstlisting}
+<script>
+function checkname(fname) {
+        var n = document.getElementById('myform')
+        var m = document.getElementById(fname + 'msg')
+        if ( /^[a-z A-Z]+$/.test(n[fname].value)) {   
+                m.textContent = "[OK]"; return true
+        } else {
+                m.textContent = "[INVALID]";  return  false
+        } }
+function checkage(fname) {
+        var n = document.getElementById('myform')
+        var m = document.getElementById(fname + 'msg')
+        if ( n[fname].value > 0 && n[fname].value < 200) {      
+                m.textContent = "[OK]"; return true
+        } else {
+                m.textContent = "[INVALID, 1-200]"; return  false
+        } }
+function checkform() {
+        return (checkname('Name') && checkname('Surname') && 
+                checkAge('Age')) }
+</script>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Continued:
+\begin{lstlisting}
+...
+<form id="myform" action="..." method="post">
+Name: <input type="text" name="Name" 
+             onblur="checkname('Name')"/>
+      <span id="Namemsg"></span>
+<br/>
+Surname: <input type="text" name="Surname" 
+                onblur="checkname('Surname')"/>
+         <span id="Surnamemsg"></span>
+<br/>
+Age: <input type="text" name="Age" 
+            onblur="checkage('Age')"/>
+     <span id="Agemsg"></span>
+<br/>
+<input type="submit" name="submit" value="Send" 
+       onclick="return checkform()">
+</form>
+...
+\end{lstlisting}
+\end{frame}
+
+\section{AJAX}
+\begin{frame}
+\frametitle{AJAX}
+\begin{itemize}
+\item \structure{A}synchronous \structure{J}avascript \structure{A}nd \structure{X}ML 
+\item Browser script can make HTTP requests to web server to 
+load/update data dynamically.
+\item \lstinline!XMLHttpRequest! object does the job.
+\item Synchronous operation: block until request completed and result is taken.
+	\textbf{blocks interpreter!}. 
+\item Asynchronous operation: gets a callback function and function is called
+	by browser when request status changes.
+\item \lstinline!open(method,path, async)! method sets up the connection
+\item \lstinline!send()! will initiate the request
+\item On success \lstinline!response! contains the server response.
+\item If server sends XML document \lstinline!responseXML! contains DOM of it.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+function getFlights(depcity) {
+    var req = new XMLHttpRequest()
+    // assume getflights/city gives direct flights
+    req.open('POST','/getflights/'+depcity, false) // syncronous
+    req.send('id=all&nres=100')	  // blocks until response ready
+    if (req.status == 200) { // success
+        return req.responseXML    // XML DOM of result
+    } else 
+        return undefined
+}
+\end{lstlisting}
+Server can return an XML DOM value of direct flights from city:
+\begin{lstlisting}[language=XML]
+<xml>
+<flights><flight no="LH1231" dep="ESB" dest="MUN">Munih</flight>
+         <flight no="TK5434" dep="ESB" dest="ERC">Lefkosa</flight>
+         <flight no="TK22" dep="ESB" dest="BRL">Berlin</flight>
+</flights>
+</xml>
+\end{lstlisting}
+This DOM can be processed similar to HTML DOM.
+\end{frame}
+
+\begin{frame}[fragile]
+Asynchronous operation handled by \lstinline!onreadystatechange! event,
+called on different stages. \lstinline!readyState == 4! 
+when connection is ended. 
+\begin{lstlisting}
+function getFlights(depcity, updatefunc) {
+    var req = new XMLHttpRequest()
+    req.open('POST','/getflights/'+depcity, true) // asyncronous
+    req.onreadystatechange = function () {
+		if (req.readyState != 4) return; // intermediate states
+        if (req.status == 200) { // success
+            updatefunc(req.responsXML)    
+        } else alert('request failed:' + req.status)		 } 
+    req.send('id=all&nres=10')   // if POST, send form data here
+}// no value returned. function will be called when ready
+function updflight(xmldom) {   // update <SELECT> with flights
+    var flghts = xmldom.getElementsByTagName('flight')
+    var selbox = document.getElementById('flightselect')
+    selbox.innerHTML = ""
+    for (var i in flghts) {
+        var fno = flghts[i].getAttribute('no')
+        var fdest = flghts[i].getAttribute('dest')
+        var opt = document.createElement("OPTION")
+        opt.setAttribute('fno', fno)
+        opt.textContent = flghts[i].textContent
+    } 			}
+getFligths('ankara',updflight)
+\end{lstlisting}
+\end{frame}
+
+\subsection*{JSON}
+\begin{frame}[fragile]
+\frametitle{JSON}
+\begin{itemize}
+\item \structure{J}ava\structure{S}cript \structure{O}bject \structure{N}otation
+\item Shorter and easier then XML for exchanging data. Similar to JavaScript.
+\begin{lstlisting}[showstringspaces=false]
+user = '{"name":"Onur", 
+         "courses": [{"code":5710498, "name":"ceng498"},
+                     {"code":5710536, "name":"ceng536"}],
+         "room":"B-209"}'           
+// eval('userobj = ' + user)   works but insecure!!!! Avoid it....
+userobj = JSON(user)		// Javascript object
+userstring = JSON(userobj)	// back to first string
+\end{lstlisting}
+\item All languages have libraries for JSON generation and parsing.
+\begin{lstlisting}[language=python,showstringspaces=false]
+import json
+user = '{"name":"Onur", 
+         "courses": [{"code":5710498, "name":"ceng498"},
+                     {"code":5710536, "name":"ceng536"}],
+	 "room":"B-209"}'           
+userobj = json.loads(user)	# python dictionary
+userstring = json.dumps(userobj)  # back to string
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item JSON is denoted by \lstinline!application/json! in 
+	\lstinline!Content-type! header.
+\begin{lstlisting}
+Content-type: application/json
+
+{"result":"success",
+ "flights":[ 
+    {"no":"LH1231","dep":"ESB","dest":"MUN","city":"Munih"},
+    {"no":"TK5434","dep":"ESB","dest":"ERC","city":"Lefkosa"},
+    {"no":"TK2222","dep":"ESB","dest":"BRL","city":"Berlin"}
+  ]
+}
+\end{lstlisting}
+\item Server side can easily convert their objects into JSON strings.
+\item \lstinline!XMLHttpRequest! object \lstinline!response!
+	member can be parsed directly into Javascript object.\\
+ \lstinline!result = JSON.parse(x.response)!
+\item Much more easier than traversing XML DOM.
+\end{itemize}
+\end{frame}
+
+\section{JQuery}
+\begin{frame}
+\frametitle{JQuery}
+\begin{itemize}
+\item A Javascript library for easier Javascript development
+\begin{itemize}
+\item Shorter and easy to use element selectors \lstinline!$(".id")!
+\item Browser version abstraction. Same code support multiple browsers
+\item Animations with stylesheet
+\item Easy document manipulation and AJAX
+\item Ready to use interactive widgets through \structure{JQuery-UI} 
+\item Many contributed applications and widgets sets.
+\end{itemize}
+\item You need to download a version from \url{http://jquery.com} and
+	include in web page for example inside of \lstinline!<head></head>!:\\
+	\lstinline!<script src="/jquery/jquery.min.js"></script>"!
+\item or Google hosted one:\\
+	\lstinline!<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">!
+\end{itemize}
+\end{frame}
+
+\subsection*{Selectors}
+\begin{frame}[fragile]
+\frametitle{Selectors}
+\begin{itemize}
+\item \lstinline!$! is a shorthand for \lstinline!jQuery!.
+\item Selector \lstinline!$()! is entry point of JQuery.
+\item Selector select a set of DOM elements. Returns a result object.\\
+	\lstinline!$("tagname"), $("#id"), $(".class"), $("parent > immchild")!\\
+	\lstinline!$("parent descend") $("[attr]"), $("[attr=value]") !\\
+	\lstinline{$("[attr!=notvalue]") $("[attr^=prefix]"), $("[attr$=suffix]") }\\
+	\lstinline{$("p,span,div")} (or conn.), 
+\item There are more in selector syntax and selectors can be combined:\\
+\lstinline!$("table.plist img[src $= jpg]")! selects all \lstinline!img! tags
+	with \lstinline!src! attribute ends with \lstinline!jpg! and that
+	are contained in tables with class \lstinline!plist!.
+\end{itemize}
+\end{frame}
+
+\subsection*{Manipulation}
+\begin{frame}[fragile]
+\frametitle{Manipulation}
+\begin{itemize}
+\item Matched elements inner content can be changed. Operation is applied on
+all elements:
+\begin{itemize}
+\item \lstinline!.html(content)! replaces inner HTML.
+\item \lstinline!.text(content)! replaces inner text, HTML escaped.
+\item \lstinline!.append(content)! add content as the last item inside
+\item \lstinline!.before(content)! add content as the first item inside
+\item \lstinline!.wrapInner(content)! enclose inner elements with content
+\end{itemize}
+\item Matched elements surroundings can be changed:
+\begin{itemize}
+\item \lstinline!.wrap(content)! elements enclosed in content
+\item \lstinline!.after(content)! content inserted after elements
+\item \lstinline!.before(content)! content inserted before elements
+\end{itemize}
+\item Elements can be removed or hidden
+\begin{itemize}
+\item \lstinline!.remove()! remove elements
+\item \lstinline!.hide(), show(), toggle()! hide, show, toggle visibility
+\end{itemize}
+\item Attributes:
+\begin{itemize}
+\item \lstinline!.addClass(cls), removeClass(cls)! 
+\item \lstinline!.attr(attr,val), .removeAttr(attr)! {\scriptsize set/remove elements attribute}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection*{Traversal}
+\begin{frame}[fragile]
+\frametitle{Traversal}
+\begin{itemize}
+\item \lstinline!.find(sel)! apply filter on currenet elements
+\item \lstinline!.each(func)! apply function to all elements\\
+	\lstinline!$("*").each(function (i,e){console.log(i+el.tagName}))! \\
+	will print all element tags in document.
+\item \lstinline!.next()! give sibling following each element
+\item \lstinline!.prev()! give sibling preceding each element
+\item \lstinline!.children()! give children of each element
+\item \lstinline!.parent()! give parent of each element
+\end{itemize}
+\end{frame}
+
+
+\subsection*{Events}
+\begin{frame}[fragile]
+\frametitle{Events}
+\begin{itemize}
+\item General form of setting an event handler:\\
+	\lstinline!.on("event", data, func (ev) {...})!\\
+	\lstinline!data! is passed as \lstinline!ev.data! to handler.\\
+	\lstinline!.on("event", func (ev) {...})! is no data version\\
+	\lstinline!event! can be \lstinline!"click", "blur", "focus","submit", "select",...!
+\item All events are also provided as functions:\\
+	\lstinline!.click(func), .blur(funct), .submit(funct),...!
+\item Cancelling event handlers: \lstinline!.off()!, all handlers.\\
+	 \lstinline!.off("click")!, all click handlers.\\
+	\lstinline!.off("click",myfunc)! only \lstinline!myfunc! handler.
+\item \lstinline!.one()! binds a one time only event handler.
+\end{itemize}
+\end{frame}
+
+
+\subsection*{AJAX}
+\begin{frame}[fragile]
+\begin{itemize}
+\item \lstinline!$.post()! and \lstinline!$.get()! can be used to
+	make AJAX requests directly.
+\item \lstinline!$.post(url, data, succfunc, datatype)! is the full usage:\\
+\begin{itemize}
+\item \lstinline!data! is either a query string or an object. If object
+	\structure{jQuery} converts it into a query string using 
+	\lstinline!$.param()!
+\item \lstinline!succfunc! is a function to be called on success. It gets
+	server response as parameter.
+\item \lstinline!datatype! is the type of serer response, xml,json,...
+\item \lstinline!$.post(...).fail(func(){..})! defines failure functions
+\end{itemize}
+\item Form data can be converted on POST query string:\\
+	\lstinline!$('form').serialize()!
+\item For detailed functionality, use \lstinline!$.ajax()!.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+Flights example with \structure{jQuery}:
+\begin{lstlisting}
+function getFlights(depcity, updatefunc) {
+    $.get('/getflights/'+depcity, updflight)
+     .fail(function() { alert('error')})
+    // assume JSON response, jQuery automatically parse
+    // and send object to success function
+}
+
+function updflight(resp) {   // assume json respons
+    $('#flightselect').html('')          // clear
+    for (var i in resp.flights) {
+        $('#flightselect').append('<option></option')
+        // :last() select last child. methods can be cascaded
+        $('#flightselect>:last()').attr('fno',resp.flights[i].fno)
+                                  .text(resp.flights[i].city)
+    }
+}
+getFligths('ankara',updflight)
+\end{lstlisting}
+\end{frame}
+
+\section{Dynamic Web Applications}
+\begin{frame}[fragile]
+\begin{itemize}
+\item Implement \structure{View} on browser side
+\item \structure{Control} on browser side call server side 
+	\structure{Control} via \structure{AJAX}
+\item Server side model updates are loaded in view on browser side.
+\item All server responses converted into XML or more practically JSON
+\item Javascript get responses and update web page.
+\item More dynamism achieved in HTML5 through \structure{web sockets}.
+\end{itemize}
+\end{frame}
+\end{document}
+

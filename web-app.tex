@@ -1,0 +1,419 @@
+\documentclass[trans,compress,xcolor=table]{beamer}
+%\documentclass{article}
+%\usepackage{beamerarticle}
+\usepackage{pstricks,pst-node,pst-uml} % PSTricks package
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{etex}
+%\includeonlyframes{current}
+
+\def\circtxt#1{$\mathalpha \bigcirc \mkern-13mu \mathtt #1$}
+\def\colorline#1{\cr \noalign{\color{#1} \hrule height 1pt \vskip-3em}}
+\def\colorfline#1{\noalign{\color{#1} \hrule height 1pt}}
+
+\mode<article>
+{
+  \usepackage{fullpage}
+  \usepackage{pgf}
+  \usepackage{hyperref}
+}
+
+\mode<presentation>
+{
+  \usetheme{Antibes}
+  \usecolortheme[rgb={0.9,0.4,0.1}]{structure}
+
+  \setbeamercovered{transparent}
+}
+
+
+\title{Sofware Development with Scripting Languages:\\Web Applications}
+\author{Onur Tolga Şehitoğlu}
+\institute{Computer Engineering,METU}
+\subject{Web Applications}
+\date{30 April 2012}
+
+\begin{document}
+\lstset{language=Python,
+        basicstyle=\scriptsize\ttfamily,
+        keywordstyle=\color{blue!50!black}\bfseries,
+        identifierstyle=\color{blue!60!green}\sffamily,
+        stringstyle=\color{red!70!green}\ttfamily,
+	commentstyle=\color{blue!30!white}\itshape,
+        showstringspaces=true}
+
+\setbeamercolor{pexample}{bg=orange!5!white,fg=black}%
+
+
+ \frame{\maketitle}
+
+ \frame{\tableofcontents}
+
+\section{Introduction}
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item Idea initiated in early 90's for colloboration over Internet.
+\item World-wide-web: in general meaning applications with document access arround Internet
+\item specifically: technologies arround \structure{HTTP} and \structure{HTML}
+\item HyperText Transmission Protocol: A protocol to transmit documents
+	and provide browser based access to Internet applications.
+\item HyperText Markup Language: rich text description format with hyperlinks to
+	other documents and data.
+\item Early application: static access to hyperlinked content 
+\item Later: server based applications accessed by the browser
+\item Web 2.0: dynamic content, user collaboration, interoperability, b2b links
+\item Web 3.0: computer generated content, AI, semantics.
+\end{itemize}
+\end{frame}
+
+\section{Web application}
+\begin{frame}
+\frametitle{Web application}
+\begin{itemize}
+\item client is a web browser and communicates through HTTP to server.
+\item Early examples: user interface is HTML, CGI (Common Gateway Interface) is
+	used to transmit data.
+\item Later: XML based data description, stylesheets in visualization (CSS, XLST).
+\item DHTML,  XHTML, Javascript.
+\item Trend: Modelling server side as services. Browser side: heavy use of browser
+	side scripting. (ExtJS, jQuery, Google Web Toolkit,...)
+\end{itemize}
+\end{frame}
+
+\subsection{Advantages}
+\begin{frame}
+\frametitle{Advantages}
+\begin{itemize}
+\item Portability: anyone with a descent browser and Internet can use the application.
+\item Ease of deployment: no software installed on client side.
+\item Customizable: personalization for each user is possible.
+\item Interoperable: server to server communication, distributed architectures
+	are possible.
+\item Scalability and utilization: Load balancing on the server side is possible.
+\end{itemize}
+\end{frame}
+
+\subsection{Major Issues}
+\begin{frame}
+\frametitle{Major Issues}
+\begin{itemize}
+\item HTTP is connectionless: authentication, continuity, persistence, transaction
+	management is a problem
+\item Central application model, efficiency is essential.
+\item Browser capabilities are different.
+\item Security issues: applications are usually exposed to whole globe.
+\item Efficiency of HTTP, HTML, Javascript.
+\end{itemize}
+\end{frame}
+
+\section{HTTP Requests}
+\begin{frame}[fragile]
+\frametitle{HTTP Requests}
+\begin{itemize}
+\item An HTTP v1 request has the following pattern:
+\begin{lstlisting}[language=, escapeinside=`']
+`\it{METHOD}' `\it{PATH/URL}' HTTP/1.1\r\n
+`\it{head1}: \it{value}'\r\n
+...
+`\it{headn}: \it{value}'\r\n
+\r\n
+`\it{(optional) body}'
+\r\n
+\item HTTP response has the following pattern:
+\end{lstlisting}
+\item An HTTP response has the following pattern
+\begin{lstlisting}[language=, escapeinside=`']
+HTTP/1.1 `\it{STATCODE}' `\it{STATSTR}'\r\n
+`\it{head1}: \it{value}'\r\n
+...
+`\it{Content-Length}: \it{sizeof body}'\r\n
+\r\n
+`\it{response body}'
+\end{lstlisting}
+\item 200 is success, 3xx redirection, 4xx client errors, 5xx server errors
+\end{itemize}
+\end{frame}
+
+\subsection{HTTP Methods}
+\begin{frame}[fragile]
+\frametitle{HTTP methods}
+\begin{itemize}
+\item \structure{GET:} Get content of a web page. Arguments are passed in request URL
+\item \structure{POST:} Post data to a web page. Arguments are passed in request body
+\item \structure{HEAD:} Get only headers of a web page.
+\item \structure{OPTIONS:} Return supported methods
+\item \structure{PUT:} Upload a representation of a resource
+\item \structure{DELETE:} Delete a resource
+\item \structure{CONNECT:} For proxy requests over SSL.
+\item GET and POST are the most common methods. Others used in special applications.
+\end{itemize}
+\end{frame}
+
+
+\defverbatim[colored]\codehtmlform{
+\begin{lstlisting}[language=html,escapeinside=\{\}]
+<form method="{get or post}" 
+      action="{cgi link here}" 
+      enctype="{application/x-www-form-urlencoded or multipart/form-data}">
+<input type="text" name="name"/>
+  Sex: male <input type="radio" name="sex" value="male"/>
+       female <input type="radio" name="sex" value="female"/> </br>
+       student? <input type="check" name="student"/>
+</form>
+\end{lstlisting}
+}
+\begin{frame}
+\subsection{HTML form}
+\frametitle{HTML form}
+\begin{beamercolorbox}{pexample}
+\codehtmlform
+\end{beamercolorbox}
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item  \structure{GET}: form values encoded in the URL separated by \& :\\
+	\texttt{.../post.cgi?name=onur+tolga\&sex=male\&student=checked}
+\item \structure{POST/x-www-form-urlencoded}: form values are given in a single line in the body of the request packet.\\ {\scriptsize
+	\texttt{POST .../post.cgi HTTP/1.1}\\
+	\texttt{Host: ceng.metu.edu.tr}\\
+	\texttt{Content-type: application/x-www-form-urlencoded}\\
+	\texttt{Content-length: 40}\\
+	\texttt{}\\
+	\texttt{name=onur+tolga\&sex=male\&student=checked}\\
+	}
+\item \structure{POST/multipart/formdata}: form values are given in MIME multipart form (usefull in large content like file upload)\\ {\tiny
+	\texttt{POST .../post.cgi HTTP/1.1}\\
+	\texttt{Host: ceng.metu.edu.tr}\\
+	\texttt{Content-type: multipart/formdata ;  boundary=-------abc--}\\
+	\texttt{}\\
+	\texttt{-------abc--}\\
+	\texttt{Content-Disposition: form-data; name="name"}\\
+	\texttt{}\\
+	\texttt{onur tolga}\\
+	\texttt{-------abc--}\\
+	\texttt{Content-Disposition: form-data; name="sex"}\\
+	}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{GET or POST?}
+\begin{itemize}
+\item GET is cached, POST not
+\item When Back button pressed, POST needs resubmitting the data
+\item GET displays parameters in URL, looks crowded
+\item GET can bookmark a URL with its parameters
+\item GET has a URL size limit for parameters (2048 bytes)
+\item GET only supports ASCII, web encoded parameters, POST can send binary data
+\item GET is insecure, i.e. passwords will be visible
+\end{itemize}
+\end{frame}
+
+\section{CGI}
+\begin{frame}
+\frametitle{Common Gateway Interface}
+\begin{itemize}
+\item How server side program interacts with browser and web server
+\item Traditional CGI: server starts a new external process per
+	request.
+\item Fast CGI: a single process is created to handle multiple
+	requests.
+\item Still scalability issues.
+\item Embed interpreters into server process. Only scripts are loaded,
+	not whole processes. \structure{mod\_perl, mod\_php, mod\_python}
+\item Each server worker (process or thread) has an interpreter and
+	interpreter loads the script.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{CGI data flow}
+\begin{enumerate}
+\item Browser sends data to server in HTTP request (GET or POST)
+\item Server starts the application instance (external program or
+	script instance) passing the form data
+\item Form data is passed in environment variables (GET) or as
+	stdandart input to the application.
+\item Application reads, parses the input and constructs the HTTP
+	response
+\end{enumerate}
+\end{frame}
+
+\subsection{Application Server}
+\begin{frame}
+\frametitle{Application Server}
+\begin{itemize}
+\item Web server written in native language (Java, Python, Javascript)
+\item Each connection is handled by a new instance of an application
+	class.
+\item Advantages like persistence,  session management.
+\item Web server is not as efficient as one developed with C/C++.
+\item Besides Java not much standart.
+\end{itemize}
+\end{frame}
+
+\subsection{Mod Python}
+\begin{frame}
+\frametitle{Mod Python}
+\begin{itemize}
+\item Apache module allowing python scripts to be executed directly
+\item A single interpreter loads/processes python scripts
+\item Server and post data is made available through request
+	objects and parameters.
+\item Not actively maintained, frozen for 3 years for inactivity. 
+\end{itemize}
+\end{frame}
+
+\section{WSGI}
+\begin{frame}
+\frametitle{WSGI}
+\begin{itemize}
+\item Python Web Server Gateway Interface
+\item Standartization of web servers supporting Python and applications in Python
+\item Any server/middleware works with WSGI applications and WSGI complient frameworks
+\item Many server libraries, middlewares and server supports including 
+\structure{Apache mod-wsgi} 
+\item Many applications/frameworks run with WSGI. \\
+	WSGI application can run on various servers.\\
+	WSGI capable server can run all WSGI applications.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\simplewsgi{
+\begin{lstlisting}[escapeinside=\{\}]
+def application(environ, start_response):
+	response_body = "<html><body>Hello World</body></html>"
+	status = '200 OK'
+	response_headers = [('Content-Type','text/html')]
+	start_response(status, response_headers)
+	return [response_body]
+\end{lstlisting}}
+\begin{frame}
+\frametitle{WSGI Application}
+\begin{itemize}
+\item WSGI needs a callable (a function or any object implementing \lstinline!__call__!)
+\item Passes environment a callback function to callable
+\item Callable calls callback with HTTP status string with response to send
+	headers
+\item Then returns the body of the content
+\end{itemize}
+\begin{beamercolorbox}{pexample}
+\simplewsgi
+\end{beamercolorbox}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{WSGI server}
+\begin{itemize}
+\item Reference WSGI implementation contains a simple web server
+\begin{lstlisting}
+from wsgiref.simple_server import make_server
+
+        httpd = make_server('0.0.0.0', 8000, application)
+        print "Serving on port 8000..."
+        httpd.serve_forever()
+\end{lstlisting}
+\item \lstinline!application! is the callable function of your application
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Getting Input}
+\begin{itemize}
+\item Input of web application is GET and POST form data from browser
+\item WSGI pass it in environment object (first parameter)
+\item If method is \lstinline!GET! it is in \lstinline!env['QUERY_STRING']!
+\item If method is \lstinline!POST! it is read from \lstinline!env['wsgi.input']! ( a file object)
+\item Form data can be parsed by \lstinline!cgi.parse_qs! from \lstinline!cgi! module
+\end{itemize}
+\end{frame}
+
+\section{Session and Application Lifetime}
+\begin{frame}[fragile]
+\begin{itemize}
+\item An HTTP request/response has one shot lifetime. Each connection is independent and closed after a short period.
+\item Each time a user clicks a button or link a new application instance 
+has to get that request.
+\item Keeping a user session open requires extra mechanisms
+\item Browsers support persistent headers that are called \structure{cookies}.
+\item A \structure{Cookie} is a variable that can be set by the 
+application in HTTP response
+\item After a cookie is set, the browser keeps sending same variable value to
+the same application. (not accross servers!!)
+\item An application typically associates a session variable with users state 
+and all instances load state from variable
+\end{itemize}
+\end{frame}
+
+\section{Cookies}
+\begin{frame}[fragile]
+\frametitle{Cookies}
+\begin{itemize}
+\item A Cookie is set through \structure{Set-Cookie} header by the server response.
+Browser sends cookie to \structure{same domain only!}
+\item Each cookie header sets a \lstinline!varname=value! information and optional attributes:
+\begin{itemize}
+\item \lstinline!Domain! like \lstinline!metu.edu.tr! for cookies shared by different domains.
+This cookie set by \lstinline!www.metu.edu.tr! will be sent to \lstinline!webmail.metu.edu.tr! as
+well.
+\item \lstinline!Path! like \lstinline!/app! for same server has multiple applications. Only
+URLs prefixed by the Path will take the cookie.
+\item \lstinline!Expires! the time for expiration of a cookie in  a standart form:\\
+\lstinline!strftime("%a, %d %b %Y %H:%M:%S %Z",gmtime(time() + age))! \\
+can be used to set a cookie with given \structure{age} in seconds.
+\item \lstinline!Secure!: cookie will only used by browser in encrypted connections.
+\item \lstinline!HttpOnly!: cookie will be used only for direct HTTP/HTTPS requests. Scripts cannot
+send this cookie.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item A sample header would have been:\\
+ \texttt{\scriptsize Set-Cookie: themepref=highlight; Domain=metu.edu.tr; Path=/; Expires=Fri, 15 Dec 2017 07:08:03 GMT; HttpOnly}
+\item The browser sends this cookie in requests headers to all servers with \texttt{*.metu.edu.tr}  and \texttt{metu.edu.tr} until expiration date. Only user initiated requests sends this cookie (HttpOnly). Cookie header will be:\\
+\texttt{\scriptsize Cookie: themepref=highlight}
+\item If more than one cookie is to be sent to the same domain, they are sent in a semicolon seperated list:\\
+\texttt{\scriptsize Cookie: themepref=highlight; sessid=aa5a2ba151sdaqq2; page=32}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Third-party Cookies}
+\begin{itemize}
+\item  Domain A can send an irrelevant cookie for another domain B with \lstinline!Domain! attribute.
+\item A user accessing domain \lstinline!xshopx.com! can set a cookie to \lstinline!example.com!.
+\item When user visits \lstinline!nvsppr.com!, it makes a request to \lstinline!example.com! in a frame or in a
+	browser script.
+\item \lstinline!example.com! gets the same cookie and shows a custom advertisement for user using
+his history in \lstinline!xshopx.com!.
+\item There are legitimate uses like third party authentication, but mostly for advertisement and user tracking.
+\item Some browsers disable them by default.
+\end{itemize}
+\end{frame}
+
+\subsection{Sessions}
+\begin{frame}[fragile]
+\frametitle{Setting session}
+\begin{enumerate}
+\item If no session variable is set (\lstinline!Cookie! header):
+\begin{enumerate}
+	\item Show login page and authenticate
+	\item On authentication response, set session cookie
+			(\lstinline!Set-Cookie!, give a random id and save on database)
+	\item redirect to original page (\lstinline!302 Found! result, \lstinline!Location! header in HTTP response)
+\end{enumerate}
+\item If session variable is set, load the sesion variable and state
+	from database
+\end{enumerate}
+\end{frame}
+
+
+
+
+\end{document}

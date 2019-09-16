@@ -1,0 +1,582 @@
+\documentclass[trans,compress,xcolor=table]{beamer}
+%\documentclass{article}
+%\usepackage{beamerarticle}
+\usepackage{pstricks,pst-node,pst-uml} % PSTricks package
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{multicol}
+%\includeonlyframes{current}
+
+\def\circtxt#1{$\mathalpha \bigcirc \mkern-13mu \mathtt #1$}
+\def\colorline#1{\cr \noalign{\color{#1} \hrule height 1pt \vskip-3em}}
+\def\colorfline#1{\noalign{\color{#1} \hrule height 1pt}}
+
+\mode<article>
+{
+  \usepackage{fullpage}
+  \usepackage{pgf}
+  \usepackage{hyperref}
+}
+
+\mode<presentation>
+{
+  \usetheme{Antibes}
+  \usecolortheme[rgb={0.9,0.4,0.1}]{structure}
+
+  \setbeamercovered{transparent}
+}
+
+
+\title{Sofware Development with Scripting Languages:\\Python Crash Course}
+\author{Onur Tolga Şehitoğlu}
+\institute{Computer Engineering,METU}
+\subject{Python Crash Course}
+\date{24 February 2011}
+
+\begin{document}
+\lstset{language=Python,
+        basicstyle=\scriptsize\ttfamily,
+        keywordstyle=\color{blue!50!black}\bfseries,
+        identifierstyle=\color{blue!60!green}\sffamily,
+        stringstyle=\color{red!70!green}\ttfamily,
+	commentstyle=\color{blue!30!white}\itshape,
+        showstringspaces=true}
+
+\setbeamercolor{pexample}{bg=orange!5!white,fg=black}%
+
+
+ \frame{\maketitle}
+ \frame{\tableofcontents}
+
+\section{Python Syntax}
+\begin{frame}
+\frametitle{Python Syntax}
+\begin{itemize}
+\item \alert{Indentation sensitive!!}
+\item Code blocks are marked by indentation, not by explicit block markers (like \{ \} in C)
+\item Each physical line indented with respect to previous one is assumed to be a new block
+\item Blocks are only valid with block definitions (functions, loops, conditionals)
+\item Backslash is used to join next line to current line \structure{continuation}
+\item Bracket/paranthesis expressions explicitly introduce continuation
+\end{itemize}
+\end{frame}
+
+\section{Values and Types}
+\begin{frame}
+\frametitle{Values and Types}
+\begin{itemize}
+\item \lstinline!type(..)! returns the type of any expression
+\item Types
+	\begin{itemize}
+	\item Primitive: \lstinline!int! \lstinline!float! \lstinline!complex! \lstinline!bool! \lstinline!str! \lstinline!unicode!
+	\item Composite: \lstinline!tuple!, \lstinline!list!, \lstinline!dict!
+	\item User defined and library classes
+	\end{itemize}
+\item Literals
+	\begin{itemize}
+		\item \lstinline!123! , \lstinline!231.23e-12! ,  \lstinline!2.3+3.534j!  , \lstinline!True!   , \lstinline!'hello'!  , \lstinline!"world"!  , \lstinline!u"hosgeldiniz"!
+		\item \lstinline!1231412412312L! (long), \lstinline!0432! (octal), \lstinline!0x43fe! (hex),
+			\lstinline!0b0100110101! (binary)
+		\item Composite: \lstinline!('ali',123)! \lstinline!['134',2,5]! \lstinline!\{'ali':4, 'veli':5\}! \lstinline!lambda x:x*x!
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Composite Types}
+\begin{frame}
+\frametitle{Composite Types}
+\begin{itemize}
+\item All types have their classes and class interface
+\item \lstinline!help(classname)! is provided interactively
+\item \structure{Tuples}: sequence of values separated by comma, enclosed in parenthesis. Immutable
+\item \structure{Lists}: sequence of values (non-homogeneous), enclosed in brackets. Mutable
+\item \structure{Sets}: no specific syntax \lstinline!set()! constructor is used.
+\item \structure{Dicts}: key-value pairs. key can be any hashable value (primitive)
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codeoperators{
+\begin{lstlisting}
++       -       *       **      /       //      %
+<<      >>      &       |       ^       ~
+<       >       <=      >=      ==      !=      <>    is
+(       )       [       ]       {       }     @
+=       +=      -=      *=      /=      //=     %=
+&=      |=      ^=      >>=     <<=     **=
+or 		and 	not     del
+.       ;       :
+\end{lstlisting}}
+\section{Operators}
+\begin{frame}
+\frametitle{Operators and delimiters}
+\begin{beamercolorbox}{pexample}
+\codeoperators
+\end{beamercolorbox}
+\begin{itemize}
+\item \lstinline!is! operands use same exact memory area
+\item \lstinline!//! flooring division (floating point)
+\item \lstinline!**! power operator, right associative high precedence
+\item \lstinline!del! delete an item from a data structure
+\end{itemize}
+
+\end{frame}
+
+
+\section{Conditional}
+\defverbatim[colored]\codecondition{
+\begin{lstlisting}[escapeinside=\{\}]
+if {\em condition\/} :
+   {\em statements\/}
+elif {\em condition\/} :
+   {\em statements\/}
+else:
+   {\em statements\/}
+\end{lstlisting}}
+
+\begin{frame}
+\frametitle{Conditionals}
+\begin{beamercolorbox}{pexample}
+\codecondition
+\end{beamercolorbox}
+\begin{itemize}
+\item Indentation is required for blocks.
+\item \lstinline!elif! and \lstinline!else! parts are optional
+\item Conditional expression:\\
+\lstinline!exp1 if condition else exp2!
+\end{itemize}
+\end{frame}
+
+\section{While loop}
+
+\defverbatim[colored]\codewhile{
+\begin{lstlisting}[escapeinside=\{\}]
+while {\em condition\/} :
+   {\em loop body statements}
+else:
+   {\em termination statements}
+\end{lstlisting}}
+\begin{frame}
+\frametitle{While loop}
+\begin{beamercolorbox}{pexample}
+\codewhile
+\end{beamercolorbox}
+\begin{itemize}
+\item Loop body executed as long as condition is true
+\item If condition is false \lstinline!else! part is
+ executed and loop terminated
+ \item \lstinline!else! part is optional
+\end{itemize}
+\end{frame}
+\section{For loop}
+
+\defverbatim[colored]\codefor{
+\begin{lstlisting}[escapeinside=\{\}]
+for {\em var\/} in {\em iterable expression\/} :
+   {\em loop body statements}
+else:
+   {\em termination statements}
+\end{lstlisting}}
+\begin{frame}
+\frametitle{For loop}
+\begin{beamercolorbox}{pexample}
+\codefor
+\end{beamercolorbox}
+\begin{itemize}
+\item Definite iteration over  a data structure
+\item Iterable expression evaluated once. Then for each \lstinline!next()! value
+     body of the loop is executed. The variable is assigned to value from next.
+\item When all elements iterated, \lstinline!else! part is
+ executed and loop terminated
+ \item \lstinline!else! part is optional
+ \item lists, tuples, strings, dictionaries,... are iteratable objects
+\end{itemize}
+\end{frame}
+
+\section{Escapes}
+\begin{frame}
+\frametitle{Escapes}
+\begin{itemize}
+\item \lstinline!break! terminates the last enclosing 
+loop without executing \lstinline!else:! part if defined
+\item \lstinline!continue! jumps to the beginning of next
+   iteration (skips remaining part of the loop body)
+\item \lstinline!try! statement is used to handle exceptions
+\end{itemize}
+\end{frame}
+
+
+\section{Exceptions}
+\defverbatim[colored]\codetry{
+\begin{lstlisting}[escapeinside=\{\}]
+try:
+   {\em statements}
+except {\em exceptionvalue\/} :
+   {\em handler statements}
+except {\em excetionvalue2\/} as {\em var\/}:
+   {\em handler can refer to var for exception arguments}
+except :
+   {\em any exception handling}
+\end{lstlisting}}
+\begin{frame}
+\frametitle{Exceptions}
+\begin{beamercolorbox}{pexample}
+\codetry
+\end{beamercolorbox}
+
+\begin{itemize}
+\item exception values belong to \lstinline!exception! class
+\item \lstinline!raise! statement can be used to raise an exception
+\item If not handled exceptions stop execution
+\item \lstinline!exception! class can be extended to define user-defined exceptions
+\end{itemize}
+\end{frame}
+
+\section{Function definition}
+\defverbatim[colored]\codefunction{
+\begin{lstlisting}[escapeinside=\{\}]
+def {\em functionname\/}({\em parameterlist\/}) :
+   """ function documentation here
+       continues....
+   """
+   {\em statements, function body\/}
+   return {\em function return value\/}
+\end{lstlisting}}
+\begin{frame}
+\frametitle{Function definition}
+\begin{beamercolorbox}{pexample}
+\codefunction
+\end{beamercolorbox}
+
+\begin{itemize}
+\item Parameters can have default values as \lstinline!def f(x=0,y=0): ...!
+\item When calling parameters can be explicitly chosen as \lstinline!f(y=2, x=4)!
+\item Parameter passing is \structure{pass by reference}. The mutability of
+      values are significant.
+\item Assignment semantics is followed for parameter passing
+\end{itemize}
+\end{frame}
+
+\section{Class definition}
+\defverbatim[colored]\codeclass{
+\begin{lstlisting}[escapeinside=\{\}]
+class {\em classname\/}({\em optionalbaseclass\/}) :
+   """ class documentation here
+       continues....
+   """
+   cx = 0	# class member
+   def __init__(self):
+       """ this is constructor """
+       self.x = 0    # how to create/access member variables
+       self.y = 0
+       self.cx += 1	# class member, classname.cx += 1 is similar
+   def increment(self):
+       self.x += 1
+   def _notprivate(self):
+       pass          # no private members but methods starting with
+                     # _ are private by convention
+
+
+x = classname()     # how to create an instance
+x.increment()       # call member
+classname.increment(x) # other way of calling it
+print(classname.cx)	# class members can be accessed as well
+
+\end{lstlisting}}
+\begin{frame}
+\frametitle{Class definition}
+\begin{beamercolorbox}{pexample}
+\codeclass
+\end{beamercolorbox}
+\end{frame}
+\begin{frame}
+\begin{itemize}
+\item \lstinline!self! is always the first parameter of the class method, it is
+     passed as the firs parameter
+\item \lstinline!__init__! is the constructor name
+\item \lstinline!__str__! can be implemented to get string representing the object
+\item \lstinline!__unicode__! can be implemented to get unicode string representing the object
+\item \lstinline!__repr__! can be implemented to change how interpreter displays the object. 
+	\lstinline!str()! calls \lstinline!repr()! when not implemented
+\item \lstinline!__new__! is the class constructor (called before init)
+\item \lstinline!isinstance(x, Myclass)! is instance check
+\item \lstinline!issubclass(Cl1, Cl2)! is subclass check
+\item \lstinline!super()! is the super class of the class
+\end{itemize}
+\end{frame}
+
+\section{Operator Overloading}
+\begin{frame}
+\frametitle{Operator Overloading}
+\begin{itemize}
+\item Operator overloading achieved through special
+	member functions:\\
+\lstinline'x * y' $\rightarrow$ \lstinline!x.__mult__(y)!\\
+\lstinline'x / y' $\rightarrow$ \lstinline!x.__div__(y)!\\
+\lstinline'x // y' $\rightarrow$ \lstinline!x.__floordiv(y)!\\
+\lstinline'x > y' $\rightarrow$ \lstinline!x.__gt__(y)!\\
+\lstinline'x[y]' $\rightarrow$ \lstinline!x.__getitem__(y)!\\
+\lstinline'x[y]=z' $\rightarrow$ \lstinline!x.__setitem__(y,z)!\\
+\lstinline'del x[y]' $\rightarrow$ \lstinline!x.__delitem__(y)!\\
+\lstinline'x in y' $\rightarrow$ \lstinline!x.__contains__(y)!\\
+\lstinline'x += y' $\rightarrow$ \lstinline!x.__iadd__(y)!\\
+\lstinline'x.y' $\rightarrow$ \lstinline!x.__getattr__(y)!\\
+\lstinline'x.y = z' $\rightarrow$ \lstinline!x.__setattr__(y,z)!\\
+\lstinline'del x.y' $\rightarrow$ \lstinline!x.__delattr__(y)!\\
+\end{itemize}
+
+\end{frame}
+
+\section{Variable Scope and Lifetime}
+\begin{frame}
+\frametitle{Variable Scope and Lifetime}
+\begin{itemize}
+\item Variables are local to enclosing block
+\item Global variables have read only access unless
+	they are used as l-value in the block
+\item If variable used as an l-value a local variable
+	is created and all read-only accesses preceding
+	it gives an error
+\item \lstinline'global' keyword is used to make a global variable
+	available in a local block (read and update)
+\end{itemize}
+\end{frame}
+
+\section{Assignment Semantics}
+\begin{frame}
+\frametitle{Assignment Semantics}
+\begin{itemize}
+\item Share semantics
+\item Assignment copies reference, not data
+\item Object assignment creates two variables denoting
+	same object
+\item Primitive values copied, objects shared (like Java)
+\item Parameters pass by value for primitives, reference for
+	objects
+\item Constructors needed for copying \lstinline!list([1,2,3])!
+\end{itemize}
+\end{frame}
+
+\section{Iterators}
+\begin{frame}
+\frametitle{Iterators}
+\begin{itemize}
+\item Iterators are used to iterate on data structures or create
+	sequences
+\item \lstinline!__iter__! method returns the iterator object
+\item \lstinline!next! method gives the next object for the iterator
+\item \lstinline!StopIteration! exception is rased on \lstinline!next! to
+	end iteration
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codeiterator{
+\begin{lstlisting}[escapeinside=\{\}]
+for i in a:
+   # loop body
+
+{\rm\em is equivalent to:\/}
+
+it=iter(a)
+try:
+   i=it.next()
+   while True:
+   	# loop body
+        i=it.next()
+except StopIteration:
+   pass
+\end{lstlisting}}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codeiterator
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codefibiter{
+\begin{lstlisting}[escapeinside=\{\}]
+class Fibonacci:
+   def __init__(self,n):
+	self.a = 0
+	self.b = 1
+	self.count = 0
+	self.n = n
+   def __iter__(self):
+	return self
+   def next(self):
+	self.count += 1
+	if self.count >= self.n:
+		raise StopIteration
+	self.a, self.b = self.b , self.a + self.b
+	return self.a
+\end{lstlisting}}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codefibiter
+\end{beamercolorbox}
+\end{frame}
+
+\section{Generators}
+\begin{frame}
+\begin{itemize}
+\item In \structure{iterators} the state has to be kept in iterator object
+\item Consider  a single instance of \lstinline!Fibonacci! iterated on a nested loop!
+\item A correct implementation has to create a new instance for each \lstinline!iter()! call
+\item Hard to write iterators on objects with \lstinline!next()! value is
+	not trivial
+\item \structure{Generators} automatically keep state of computation and continue where it left.
+\item Use of \lstinline!yield! keyword is sufficient to write a generator
+\item Each \lstinline!yield! corressponds to a \lstinline!next()!
+\item Generator functions only \lstinline!return! without parameter to
+	mark end of computation
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codefibgen{
+\begin{lstlisting}[escapeinside=\{\}]
+def fibonacci(n):
+	a = 0
+	b = 1
+	count = 0
+	while n>count:
+		yield  b
+		a,b = b,a+b
+		count += 1
+\end{lstlisting}}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codefibgen
+
+Python creates all required intermediate objects and methods.
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codebst{
+\begin{lstlisting}[basicstyle=\tiny\ttfamily,escapeinside=\{\}]
+class BSTree:
+	''' A binary search tree example'''
+	def __init__(self):
+		self.node = None
+	def set(self, key, val):
+		if self.node == None:	# empty tree
+			self.node = (key, val)	# node content is a tuple
+			self.left, self.right = BSTree(), BSTree()
+		elif key < self.node[0]:	# not empty test key
+			self.left.set(key, val)		# insert on left subtree
+		elif key > self.node[0]:	
+			self.right.set(key, val)	# insert on right subtree
+		else:
+			self.node = (key, val)		# update
+	def get(self, key):
+		if self.node == None:	# empty tree
+			raise KeyError	# list, tuple also raise this
+		elif key < self.node[0]:
+			self.left.get(key)
+		elif key < self.node[0]:
+			self.right.get(key)
+		else:
+			return self.node[1]	# found, return value
+        def __str__(self):
+                if self.node == None:   return "*"
+                else:   return "[" + str(self.left) + str(self.node) +\
+                                 str(self.right) + "]"
+
+a = BSTree()
+for i in [6,2,8,3,9,1]:
+	a.set(i, i*i)
+print(a)
+\end{lstlisting}}
+\begin{frame}
+\frametitle{A Tree Example}
+\begin{beamercolorbox}{pexample}
+\codebst
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codebstiter{
+\begin{lstlisting}[basicstyle=\tiny\ttfamily,escapeinside=\{\}]
+# ... added to BST
+        def _nextof(self, key):		# return min value >key 
+                if self.node == None: 	return None
+                elif key == None or key < self.node[0]:
+                        v = self.left._nextof(key)
+			return self.node if v == None else v
+                else:
+                        return self.right._nextof(key)
+
+        def __iter__(self):
+                return BSTree.BSTreeIter(self)	# new instance of nested class
+
+        class BSTreeIter:
+                def __init__(self, tree):
+                        self.tree = tree
+                        self.state = None
+                def next(self):
+                        nextnode = self.tree._nextof(self.state)
+                        if nextnode == None:
+                                raise StopIteration
+			else:
+				self.state = nextnode[0]
+				return nextnode
+# main
+a = BSTree()
+#...  insert values etc.
+for (k,v) in a:
+	print(k,v)
+\end{lstlisting}}
+\begin{frame}
+\frametitle{An  iterator on Tree Example}
+\begin{beamercolorbox}{pexample}
+\codebstiter
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codebstgen{
+\begin{lstlisting}[escapeinside=\{\}]
+# ... added to BSTtree
+	def traverse(self):
+		if self.node == None:
+			raise StopIteration
+		else:
+			for (k,v) in self.left.traverse():
+				yield (k,v)
+
+			yield self.node
+
+			for (k,v) in self.right.traverse():
+				yield (k,v)
+
+# main
+a = BSTree()
+#...  insert values etc.
+for (k,v) in a.traverse():
+	print(k,v)
+\end{lstlisting}}
+\begin{frame}
+\frametitle{A  generator on Tree Example}
+\begin{beamercolorbox}{pexample}
+\codebstgen
+\end{beamercolorbox}
+\end{frame}
+
+
+\section{String Processing}
+\begin{frame}
+\begin{itemize}
+\frametitle{String Processing}
+\item \lstinline!str()! class implements methods to process strings
+\item \lstinline!string.split(delimeter)! is used to convert string to 
+	an array of strings delimeted by delimeters.
+\item \lstinline!string.join(array)! is used to convert a array of
+strings to a concatanated string, seperated by the string object
+\item \lstinline!map(function, sequence)! is used to apply function to
+   all members of the sequence and return a list of return values
+\item \lstinline!string.join(map(str, array))! will join string
+	representation of all array types
+\item \lstinline!+! concatanates to strings. All lexicographic
+	comparisons are implemented as usual operators.
+\item \lstinline!string.index(substr)! searches and returns position
+	of substring in the string. \lstinline!find()!: same but
+	returns -1 instead of exception.
+\end{itemize}
+\end{frame}
+\end{document}
+
