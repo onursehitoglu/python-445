@@ -1,0 +1,559 @@
+\documentclass[trans,compress,xcolor=table]{beamer}
+%\documentclass{article}
+%\usepackage{beamerarticle}
+\usepackage{pstricks,pst-node,pst-uml} % PSTricks package
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{multicol}
+%\includeonlyframes{current}
+
+\def\circtxt#1{$\mathalpha \bigcirc \mkern-13mu \mathtt #1$}
+\def\colorline#1{\cr \noalign{\color{#1} \hrule height 1pt \vskip-3em}}
+\def\colorfline#1{\noalign{\color{#1} \hrule height 1pt}}
+
+\mode<article>
+{
+  \usepackage{fullpage}
+  \usepackage{pgf}
+  \usepackage{hyperref}
+}
+
+\mode<presentation>
+{
+  \usetheme{Antibes}
+  \usecolortheme[rgb={0.9,0.4,0.1}]{structure}
+
+  \setbeamercovered{transparent}
+}
+
+
+\title{Sofware Development with Scripting Languages:\\Design Patterns}
+\author{Onur Tolga Şehitoğlu}
+\institute{Computer Engineering,METU}
+\subject{Design Patterns}
+\date{2 April 2012}
+
+\begin{document}
+\lstset{language=Python,
+        basicstyle=\scriptsize\ttfamily,
+        keywordstyle=\color{blue!50!black}\bfseries,
+        identifierstyle=\color{blue!60!green}\sffamily,
+        stringstyle=\color{red!70!green}\ttfamily,
+	commentstyle=\color{blue!30!white}\itshape,
+        showstringspaces=true}
+
+\setbeamercolor{pexample}{bg=orange!5!white,fg=black}%
+
+
+ \frame{\maketitle}
+
+ \frame{\tableofcontents}
+
+\section{Motivation}
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}
+\item Object Oriented design $\leftarrow$ code reusability.
+\item Solving similar problems in similar ways.
+\item Can we re-use design as well?
+\item Design patterns are \structure{not} algorithms, data structures, libraries.
+\item Reusable solution to a commonly occuring problem.
+\item Origins: architecture. Applied to software development later.
+\end{itemize}
+\end{frame}
+
+\section{Classification of Design Patterns}
+\begin{frame}
+\frametitle{Classification of Design Patterns based}
+\begin{itemize}
+\item Creational: creation of new objects
+\item Structural: relationships between entities
+\item Behavioural: communication patterns between objects
+\item Domain specific: (user interface, visualization, security, server,
+	concurrency, ...)
+\end{itemize}
+\end{frame}
+
+\section{Creational Patterns}
+\subsection{Singleton}
+\begin{frame}
+\frametitle{Singleton Pattern}
+\begin{itemize}
+\item \structure{Problem:} You need only one instance of an object in the application
+\item For example database, file store, game board, interface object, etc.
+\item \structure{Naive solution:} Use global a variable, just don't
+create the second object. You are the programmer aren't you?
+\item \structure{Problem with the naive solution:} Global namespace gets 
+crowded variable name vs class name confusion, you need to make
+sure second object is not created, always need to create the object
+even not used.
+\item \structure{Singleton:} A special class implementation that
+returns always the same object when created.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codesinga{
+\begin{lstlisting}[escapeinside=\{\}]
+class Singleton(object):
+    def __new__(cls, *a, **k):
+        if not hasattr(cls, '_inst'):
+	    # super calls __new__ of the 'cls'
+            cls._inst = super(Singleton, cls).__new__(cls, *a, **k)
+	return cls._inst
+class Counter(Singleton):
+    def __init__(self):
+	if not hasattr(self,'val'):
+		self.val = 0
+    def get(self):
+	return self.val
+    def incr(self):
+	self.val += 1
+
+a = Counter()
+b = Counter()
+Counter().incr()
+Counter().get()
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codesinga
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codesingb{
+\begin{lstlisting}[escapeinside=\{\}]
+def singleton(cls):
+   _instances = {}   # keep classname vs. instance
+   def getinstance():
+      '''if cls is not in _inst.. create, store, return the instance'''
+      if cls not in _instances:
+         _instances[cls] = cls()
+      return _instances[cls]
+   return getinstance
+
+@singleton
+class Counter(object):
+    def __init__(self):
+	if not hasattr(self,'val'): self.val = 0
+    def get(self):
+	return self.val
+    def incr(self):
+	self.val += 1
+
+a = Counter()
+Counter().incr()
+Counter().get()
+\end{lstlisting}
+}
+\begin{frame}
+Subclassing other superclasses are problems. A python decorator
+version:
+\begin{beamercolorbox}{pexample}
+\codesingb
+\end{beamercolorbox}
+\end{frame}
+
+\defverbatim[colored]\codepydec{
+\begin{lstlisting}[escapeinside=\{\}]
+def dec():
+    def f():
+      .....
+    return f
+
+# ---
+@dec
+class cls(): {class defn here}
+# equivalent to 
+class cls(): {class defn here}
+cls = dec( cls )
+# ---
+
+obj = cls()     # call actually made on f() inside dec()
+\end{lstlisting}
+}
+\begin{frame}
+\begin{itemize}
+\item Python decorators are evaluated during function/class definition
+	and maps function/class definition into a new one
+\item Decorators are functions returning a callable that replaces
+	function/class constructor
+\begin{beamercolorbox}{pexample}
+\codepydec
+\end{beamercolorbox}
+\end{itemize}
+\end{frame}
+
+\subsection{Factory Pattern}
+\begin{frame}
+\frametitle{Factory Pattern}
+\begin{itemize}
+\item \structure{Problem:} Create objects from a set of classes. Implementation
+	depends on class definitions. Introduction of new classes and 
+	other changes need recompilation. Class constructors exposed.
+\item \structure{Solution:} Use interface functions/objects to encapsulate
+	class names and constructors.
+	Use a interface functions, methods to provide you instances. Rest is
+	handled by polymorphism.
+\item Central lifetime management and recycling of objects are possible.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codefactory{
+\begin{lstlisting}[basicstyle=\tiny\ttfamily,escapeinside=\{\}]
+class Player(object):
+    def getName(self):
+        return self.name
+    def hitpower(self):
+        return self.hit
+
+class Peasant(Player):
+   def __init__(self, name):
+       self.name = name
+       self.hit = 1
+class Warior(Player):
+   def __init__(self,name):
+      self.name = name
+      self.hit = 10
+
+@singleton
+class PlayerFactory(object):
+   def new(self,name,type):
+       if type == 'peasant':
+	    return Peasant(name)
+       elif type == 'warior':
+ 	    return Warior(name)
+       else:
+	    return None
+
+a = PlayerFactory().new('ali','peasant')
+b = PlayerFactory().new('veli','warior')
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codefactory
+\end{beamercolorbox}
+\end{frame}
+
+\section{Structural Patterns}
+\subsection{Facade}
+\begin{frame}
+\frametitle{Facade Pattern}
+\begin{itemize}
+\item \structure{Problem:} A complex library, tool or system;
+	consisting of many functions and/or classes; probably
+	poorly designed
+	is tried to be accessed. It is hard to read and understand. 
+	There are many dependencies distributed in the source,  needs
+	many housekeeping tasks and stages to access. Any change
+	in the system require changes in the whole source code.
+\item \structure{Solution:}
+	Define a class implementing all details of the 
+	library/system and providing a simple uniform interface. Access
+	the library through this interface.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codefacade{
+\begin{lstlisting}[escapeinside=\{\}]
+'''libraries here'''
+class AuthFacade(object):
+   def __init__(self,method):
+       if method == 'passwd':
+	    # ... use crypt for linux password authentication
+       elif method == 'oauth':
+ 	    # ... use oauth methods to check authentication
+       elif method == 'otp':
+ 	    # ... use one time password routinges for authentication
+       else:
+	    throw ...
+   def auth(self, identity, data):
+	''' check authentication based on setting'''
+
+a=AuthFacade('otp')
+result  = a.auth('onur','123456')   
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codefacade
+\end{beamercolorbox}
+\end{frame}
+
+\subsection{Proxy Pattern}
+\begin{frame}
+\frametitle{Proxy Pattern}
+\begin{itemize}
+\item \structure{Problem:} You need to access a hard to duplicate, 
+	limited, probably old class definition. You donot have
+	a chance to improve it or change the interface. Or, you want
+	to have restricted access to methods (authorization). Or,
+	you want smarter access like caching.
+\item \structure{Solution:} Write a class interface implementing
+	functionalities missing in the original interface. 
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codeproxy{
+\begin{lstlisting}[escapeinside=\{\}]
+@singleton
+class Counter(object):
+   def __init__(self):
+	self.val = 0
+   def incr(self):
+	self.val += 1
+   def get(self):
+	return self.val
+
+class CounterProxy(object):
+   def __init__(self, type):
+	self.type = type
+   def incr(self):
+	if type == 'W':
+		Counter().incr()
+   def get(self):
+	return Counter().get()
+
+a = CounterProxy('R')
+b = CounterProxy('W')
+a.incr()
+b.incr()
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codeproxy
+\end{beamercolorbox}
+\end{frame}
+
+\subsection{Proxy}
+\frametitle{Proxy, Facade and Adapter}
+\begin{frame}
+\begin{itemize}
+\item \structure{Proxy}, \structure{Facade}, and \structure{Adapter} provide similar
+	encapsulation.
+\item In \structure{Proxy}, interface of the wrapped class is same with the \structure{Proxy}. It adds extra functionality (i.e. accounting, caching, remote object, access control)
+\item In \structure{Adapter}, interface of the wrapped class is different than \structure{Adapter} class. 
+Caller interface is mapped to the adapted interface.
+\item In \structure{Facade}, there is no single class to be wrapped but a set of classes, a subsystem. \structure{Facade} simplifies it.
+\end{itemize}
+\end{frame}
+
+\subsection{Decorator}
+\begin{frame}
+\frametitle{Decorator}
+\begin{itemize}
+\item \structure{Problem:} Objects having different behaviour for different 
+run-time settings. 
+\item \structure{Naive solution:} Have a subclass for each different
+combination of attributes. $n$ attributes $\rightarrow$ $2^n$ subclasses.
+\item \structure{Solution:} Create a decorator class wrapping the original
+behaviour. Cascading behaviours for each new decorator.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codedecor{
+\begin{lstlisting}[escapeinside=\{\}]
+class Coffee(object):
+   def __init__(self,size):
+	self.size = size
+   def cost(self):
+	if self.size == 'S': return 2.0
+	elif self.size == 'M': return 3.0
+	elif self.size == 'L': return 3.5
+	else raise InvalidSize
+
+class CoffeeDecorator(object):
+        def __init__(self,w):
+                self._w = w  #wrapped object
+        def __getattr__(self,name):
+                return getattr(self._w, name)
+class WithMilk(CoffeeDecorator):
+	def cost(self):
+		return 1.0 + self._w.cost()
+class WithCaramel(CoffeeDecorator):
+	def cost(self):
+		return 0.5 + self._w.cost()
+
+a = WithCaramel(WithMilk(Coffee('L')))
+print a.cost()
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codedecor
+\end{beamercolorbox}
+\end{frame}
+
+\section{Behavioral Patterns}
+\subsection{Observer}
+\begin{frame}
+\frametitle{Observer}
+\begin{itemize}
+\item \structure{Problem:} Objects depending on eachothers states need to
+be informed when the other encountered a change. Event handling systems.
+\item \structure{Solution:} Maintain a registry of observing objects
+in Subject object. When an event occurs, \structure{notify} the observers.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codeobs{
+\begin{lstlisting}[escapeinside=\{\},basicstyle=\tiny\ttfamily]
+class Subject(object):
+	_observers = []
+	def register(self,obs):
+		self._observers.append(obs)
+	def unregister(self,obs):
+		self._observers.remove(obs)
+	def notify(self):
+		for o in self._observers:
+			o.update(self)
+	def state(self): pass
+
+class Observer(object):
+	def update(self,subj): pass
+
+class Clock(Subject):
+	def __init__(self):
+		self.value = 0
+	def state(self):
+		return self.value
+	def tick(self):
+		self.value += 1
+		self.notify()
+
+class Person(Observer):
+	def update(self, obj):
+		print "heyo ",obj.state()
+
+a = Person()
+b = Clock()
+b.register(a)
+b.tick()
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codeobs
+\end{beamercolorbox}
+\end{frame}
+
+\subsection{Strategy}
+\begin{frame}
+\frametitle{Strategy}
+\begin{itemize}
+\item \structure{Problem:} Combination of behaviours  from multiple class 
+hierarchies.
+\item \structure{Naive Solution:} Use multiple inheritence. However for
+each combination of classes a new derivation required. Adding new behaviours
+is not easy.
+\item \structure{Solution:} Encapsulate behavours using interfaces and
+keep references in the actual class.
+\end{itemize}
+\end{frame}
+
+\subsection{State}
+\begin{frame}
+\frametitle{State}
+\begin{itemize}
+\item \structure{Problem:} A class needs to behave differently based
+on its current state. 
+\item \structure{Naive solution:} Keep state in member variables
+and use conditional statements to implement specific behaviours
+at each method. Each method depends on state and conditions replicated.
+Changing a state need update of conditionals at each method.
+\item \structure{Solution:} Encapsulate state and implement each
+	behaviour on concrete classes of \structure{State} depending
+	on current state.
+\end{itemize}
+\end{frame}
+
+\defverbatim[colored]\codestate{
+\begin{lstlisting}[escapeinside=\{\},basicstyle=\tiny\ttfamily]
+class Cursor(object):
+	def __init__(self):
+		self.current = Select()
+		mouse = "up"
+		start = None
+	def mouseDown(self,point):
+		self.current.mouseDown(self,point)
+	def mouseUp(self):
+		self.current.mouseUp(self,point)
+	def setTool(self,tool):
+		self.current = tool
+class State(object):
+	def mouseDown(self, obj, point):
+		self.obj.start = point
+class Select(State):
+	def mouseUp(self, cur, point):
+		if figure.selected:
+			figure.selected.move(cur.start, point)
+		else
+			figure.selectobjects(cur.start, point)
+class Line(State):
+	def mouseUp(self, cur, point):
+		figure.newlineobject(self.cur.start, point)
+class Erase(State):
+	def mouseUp(self, cur, point):
+		figure.deleteobjects(cur.start, point)
+
+a = Cursor()
+a.mouseDown((10,0))
+a.mouseUp((0,20))
+a.setTool = Line()
+a.mouseDown((10,10))
+a.mouseUp((20,20))
+\end{lstlisting}
+}
+\begin{frame}
+\begin{beamercolorbox}{pexample}
+\codestate
+\end{beamercolorbox}
+\end{frame}
+
+\subsection{Command}
+\begin{frame}
+\frametitle{Command}
+\begin{itemize}
+\item \structure{Problem:} Client program want to send commands but
+does not want to know internals of how command is executing.
+Providing extra functionalities like undo, macro, transaction,
+composition etc.
+\item \structure{Solution:} Encapsulate information for a method call
+	inside of a command object.
+	(object, method and parameters)
+\item Client, invoker and receiver. Invoker keeps track of method calls
+	and functionalities.
+\item Muli-level undo (stack of method calls), transatcions, progress
+	bars, wizards, macro records, parallel processing.
+\end{itemize}
+\end{frame}
+
+\section{Architectural Patterns}
+\subsection{Model View Controller}
+\begin{frame}
+\frametitle{Model View Controller}
+\begin{itemize}
+\item \structure{Architectural Patterns} patterns of software architecture
+\item \structure{Model View Controller}: Split of roles in an
+	application.
+	\begin{itemize}
+	\item  Model is the business logic and internal representation.
+	\item View is the user interface,  presentation of information.
+	\item Controller is the user input.
+	\end{itemize}
+\item Interactions
+	\begin{itemize}
+	\item user interaction $\rightarrow$ handler in the controller
+	\item controller $\rightarrow$ model update, change
+	\item model change $\rightarrow$ view  (observer) or \\
+		controller $\rightarrow$ view  inform about the change
+	\item view $\rightarrow$ model, load the changes and render
+		the new information.
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\end{document}

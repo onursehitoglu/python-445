@@ -68,14 +68,14 @@
 \item \lstinline!type(..)! returns the type of any expression
 \item Types
 	\begin{itemize}
-	\item Primitive: \lstinline!int! \lstinline!float! \lstinline!complex! \lstinline!bool! \lstinline!str! \lstinline!unicode!
-	\item Composite: \lstinline!tuple!, \lstinline!list!, \lstinline!dict!
+	\item Primitive: \lstinline!int! \lstinline!float! \lstinline!complex! \lstinline!bool! \lstinline!str! \lstinline!bytes!
+	\item Composite: \lstinline!tuple!, \lstinline!list!, \lstinline!set!, \lstinline!dict!
 	\item User defined and library classes
 	\end{itemize}
 \item Literals
 	\begin{itemize}
-		\item \lstinline!123! , \lstinline!231.23e-12! ,  \lstinline!2.3+3.534j!  , \lstinline!True!   , \lstinline!'hello'!  , \lstinline!"world"!  , \lstinline!u"hosgeldiniz"!
-		\item \lstinline!1231412412312L! (long), \lstinline!0432! (octal), \lstinline!0x43fe! (hex),
+		\item \lstinline!123! , \lstinline!231.23e-12! ,  \lstinline!2.3+3.534j!  , \lstinline!True!   , \lstinline!'hello'!  , \lstinline!"world"!  , \lstinline!b'ho\\xc5\\x9fgeldin'!
+		\item \lstinline!1231412412312L! (long), \lstinline!0o432! (octal), \lstinline!0x43fe! (hex),
 			\lstinline!0b0100110101! (binary)
 		\item Composite: \lstinline!('ali',123)! \lstinline!['134',2,5]! \lstinline!\{'ali':4, 'veli':5\}! \lstinline!lambda x:x*x!
 	\end{itemize}
@@ -86,11 +86,11 @@
 \begin{frame}
 \frametitle{Composite Types}
 \begin{itemize}
-\item All types have their classes and class interface
+\item All types have their classes and class interface. Usually heteregeneous (each value may have a different data type)
 \item \lstinline!help(classname)! is provided interactively
 \item \structure{Tuples}: sequence of values separated by comma, enclosed in parenthesis. Immutable
-\item \structure{Lists}: sequence of values (non-homogeneous), enclosed in brackets. Mutable
-\item \structure{Sets}: no specific syntax \lstinline!set()! constructor is used.
+\item \structure{Lists}: sequence of values, enclosed in brackets. Mutable
+\item \structure{Sets}:  sequence of values separated by comma, enclosed in curly braces.
 \item \structure{Dicts}: key-value pairs. key can be any hashable value (primitive)
 \end{itemize}
 \end{frame}
@@ -100,11 +100,10 @@
 +       -       *       **      /       //      %
 <<      >>      &       |       ^       ~
 <       >       <=      >=      ==      !=      <>    is
-(       )       [       ]       {       }     @
+[]      .       @
 =       +=      -=      *=      /=      //=     %=
 &=      |=      ^=      >>=     <<=     **=
-or 		and 	not     del
-.       ;       :
+or 		and 	not     del     in
 \end{lstlisting}}
 \section{Operators}
 \begin{frame}
@@ -114,7 +113,8 @@ or 		and 	not     del
 \end{beamercolorbox}
 \begin{itemize}
 \item \lstinline!is! operands use same exact memory area
-\item \lstinline!//! flooring division (floating point)
+\item \lstinline!/! floating point division (flooring for integers in Python 2)
+\item \lstinline!//! flooring division
 \item \lstinline!**! power operator, right associative high precedence
 \item \lstinline!del! delete an item from a data structure
 \end{itemize}
@@ -162,9 +162,11 @@ else:
 \end{beamercolorbox}
 \begin{itemize}
 \item Loop body executed as long as condition is true
-\item If condition is false \lstinline!else! part is
- executed and loop terminated
  \item \lstinline!else! part is optional
+\item \lstinline!else! part is
+ executed when condition fails and loop is terminated.
+\item When loop terminates without testing condition, by a \lstinline!break!,
+	\lstinline!else! part is not executed.
 \end{itemize}
 \end{frame}
 \section{For loop}
@@ -187,7 +189,7 @@ else:
      body of the loop is executed. The variable is assigned to value from next.
 \item When all elements iterated, \lstinline!else! part is
  executed and loop terminated
- \item \lstinline!else! part is optional
+ \item \lstinline!else! part is optional. Executed loop terminates without \lstinline!break! or exception.
  \item lists, tuples, strings, dictionaries,... are iteratable objects
 \end{itemize}
 \end{frame}
@@ -268,19 +270,17 @@ class {\em classname\/}({\em optionalbaseclass\/}) :
        """ this is constructor """
        self.x = 0    # how to create/access member variables
        self.y = 0
-       self.cx += 1	# class member, classname.cx += 1 is similar
+       classname.cx += 1	# class member update, 
    def increment(self):
        self.x += 1
    def _notprivate(self):
        pass          # no private members but methods starting with
                      # _ are private by convention
 
-
 x = classname()     # how to create an instance
 x.increment()       # call member
 classname.increment(x) # other way of calling it
 print(classname.cx)	# class members can be accessed as well
-
 \end{lstlisting}}
 \begin{frame}
 \frametitle{Class definition}
@@ -301,6 +301,8 @@ print(classname.cx)	# class members can be accessed as well
 \item \lstinline!isinstance(x, Myclass)! is instance check
 \item \lstinline!issubclass(Cl1, Cl2)! is subclass check
 \item \lstinline!super()! is the super class of the class
+\item \lstinline!super().__init__()! calls the super class constructor. Not implicit.
+\item \lstinline!superclassname.__init__(self, ...)! can be used as well.
 \end{itemize}
 \end{frame}
 
@@ -338,6 +340,33 @@ print(classname.cx)	# class members can be accessed as well
 	it gives an error
 \item \lstinline'global' keyword is used to make a global variable
 	available in a local block (read and update)
+\end{itemize}
+\end{frame}
+
+\section{Class Members}
+\begin{frame}[fragile]
+\frametitle{Class Members}
+\begin{beamercolorbox}{pexample}
+\begin{lstlisting}
+class T:
+    x      # class member
+    def __init__(self):
+      self.v = x   #!!!! Invalid
+      self.v = self.x   # Valid as r-value, readonly access
+      self.x = self.x + 1  # LHS instance member, LHS instance
+      T.x += 1       # correct usage
+
+a=T()
+print(a.x)    # r-value, OK
+a.x = 10      # l-value, creates an instance member
+T.x = 10      # class member
+\end{lstlisting}
+\end{beamercolorbox}
+\begin{itemize}
+\item Class members work in class scope, not in object.
+\item Instances can access them as r-value, not l-value.
+\item Scope should be given explicitly, otherwise considered local variable.
+\item \lstinline!classname.membername! is the correct way for l-value access.
 \end{itemize}
 \end{frame}
 
