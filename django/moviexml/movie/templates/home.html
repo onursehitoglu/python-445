@@ -1,0 +1,119 @@
+<html>
+<head>
+<script src="/static/jquery.js"></script>
+<style type="text/css">
+span.delbutton {
+	display: block;
+        padding-top:8px;
+        padding-left:9px;
+        padding-right:9px;
+        background: url('static/edit-delete.png') no-repeat left top;
+}
+span.updatebutton {
+	display: block;
+        padding-top:8px;
+        padding-left:9px;
+        padding-right:9px;
+        background: url('static/edit-modify.png') no-repeat left top;
+}
+span.staron {
+	color: white ;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 0px;
+        background: url('static/staron.png') no-repeat left top;
+}
+span.star {
+	color: white ;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 0px;
+        background: url('static/star.png') no-repeat left top;
+}
+span.likebutton {
+        padding-top:0px;
+        padding-left:16px;
+        background: url('static/thumb-up.png') no-repeat left top;
+}
+span.dlikebutton {
+        padding-top:0px;
+        padding-left:16px;
+        background: url('static/thumb-down.png') no-repeat left top;
+}
+</style>
+<script type="text/javascript" src="/static/dmovie.js"></script>
+</html>
+<body>
+<div align="right" id="username">{{username}}, <a href="/logout">Logout</a></div>
+<h1>Movie Party Application</h1>
+Hello choose any movie from list to vote
+or <span onClick="insertmovie();">add a new movie.</span>
+{% load poll_extra %}
+    <table border="1" cellspacing="0" id="moviestable">
+    <tr>
+    <th></th>
+        <th>title </th><th>director </th>
+        <th>cast </th>
+        <th>Status </th>
+    </tr>
+    </table>
+<!-- editblock -->
+<div id="editblock" style="position:fixed; top:50px; left:50px; display:none; 
+border: solid 1px #a0a0e0; background:#f0f0ff; padding: 20px; ">
+<form id="editform" onSubmit="return false;">
+<input type="hidden" name="id"/>
+	<table border="0"> 
+<tr><td><b>title</b></td> 
+    <td><input type="text" name="title" size="50"></td></tr> 
+<tr><td><b>director</b></td> 
+    <td><input type="text" name="director" size="50"></td></tr> 
+<tr><td><b>cast</b></td> 
+    <td><input type="text" name="cast" size="50"></td></tr> 
+<tr><td><b>imdb</b></td> 
+    <td><input type="text" name="imdb" size="50"></td></tr> 
+<tr><td colspan="2" align="right"> 
+<button onClick="document.getElementById('editblock').style.display = 'none';return false;">Cancel</button>
+<button name="actionbutton" onClick="insupdatemoviesub();return false;">Add</button>
+    </td></tr> 
+	</table>
+</form> 
+</div>
+
+<!-- deleteblock -->
+<div id="deleteblock" style="position:fixed; top:50px; left:50px; display:none; 
+	border: solid 1px #e0a0a0; background:#fff0f0; padding: 20px; ">
+Do you really want to delete the movie <span class="moviename" id="delmoviename"></span><br/>
+<button onClick="document.getElementById('deleteblock').style.display = 'none';">
+No
+</button>
+<button id='delyesanswer'>
+Yes
+</button>
+</div>
+
+<!-- loginblock -->
+<div id="loginblock" style="position:fixed; top:50px; left:50px; display:none; 
+	border: solid 1px #a0e0a0; background:#f0fff0; padding: 20px; ">
+You need to login:
+<form id="loginform" onSubmit="return false;">
+{% csrf_token %}
+<table border="0" cellspacing="0">
+<tr><td><b>Username:</b></td> 
+    <td><input type="text" name="username" size="20"></td></tr> 
+<tr><td><b>Password:</b></td> 
+    <td><input type="password" name="password" size="20"></td></tr> 
+<tr><td colspan="2" align="right"> 
+<button type="button" onClick="document.getElementById('loginblock').style.display = 'none';return false;">
+Cancel</button>
+<button id="loginbutton">Login</button>
+    </td></tr> 
+	</table>
+</form> 
+
+</div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block "body" %}
+<h2> List of students </h2>
+<table border="1" cellspacing="0">
+	<tr><th>id</th><th>name</th><th>surname</th><th>Took</th><th>Registered</th>
+	{% for student in st %}
+	<tr><td>{{student.sid}}</td><td>{{student.name}}</td>
+		<td>{{student.surname}} 
+		<td> {% for c in student.took.all %}
+				{{c.name}} <br/>
+			{% endfor %} &nbsp;</td>
+		<td> {% for c in student.registered.all %}
+				{{c.name}} <br/>
+			{% endfor %} &nbsp;</td>
+	{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+1.51
+Python
+/home/onur/498/samples/web/jqmovie/poll/tests.py	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/tests.py
+/home/onur/498/samples/web/jqmovie/poll/static/jquery-2.0.3.min.js	1374783460	0	/home/onur/498/samples/web/jqmovie/poll/static/jquery-2.0.3.min.js
+/home/onur/498/samples/web/jqmovie/__init__.py	1389602828	0	/home/onur/498/samples/web/jqmovie/__init__.py
+/home/onur/498/samples/web/jqmovie/poll/templates/registration/activation_email.txt	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/templates/registration/activation_email.txt
+/home/onur/498/samples/web/jqmovie/poll/views.py	1389709518	1	views.py
+/home/onur/498/samples/web/jqmovie/poll/templatetags/poll_extra.py	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/templatetags/poll_extra.py
+/home/onur/498/samples/web/jqmovie/poll/static/pager/jquery.tablesorter.pager.js	1287134299	0	/home/onur/498/samples/web/jqmovie/poll/static/pager/jquery.tablesorter.pager.js
+/home/onur/498/samples/web/jqmovie/manage.py	1389602828	0	/home/onur/498/samples/web/jqmovie/manage.py
+/home/onur/498/samples/web/jqmovie/settings.py	1389602858	0	/home/onur/498/samples/web/jqmovie/settings.py
+/home/onur/498/samples/web/jqmovie/poll/admin.py	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/admin.py
+/home/onur/498/samples/web/jqmovie/poll/models.py	1389602828	1	models.py
+/home/onur/498/samples/web/jqmovie/poll/static/jquery.js	1374783460	0	/home/onur/498/samples/web/jqmovie/poll/static/jquery.js
+/home/onur/498/samples/web/jqmovie/poll/static/jquery.metadata.js	1287134300	0	/home/onur/498/samples/web/jqmovie/poll/static/jquery.metadata.js
+/home/onur/498/samples/web/jqmovie/poll/templates/registration/activation_email_subject.txt	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/templates/registration/activation_email_subject.txt
+/home/onur/498/samples/web/jqmovie/poll/__init__.py	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/__init__.py
+/home/onur/498/samples/web/jqmovie/poll/forms.py	1389705315	1	NamesField
+/home/onur/498/samples/web/jqmovie/urls.py	1389602828	1	urls.py
+/home/onur/498/samples/web/jqmovie/poll/static/jqmovie.js	1389709601	1	jqmovie.js
+/home/onur/498/samples/web/jqmovie/poll/templatetags/__init__.py	1389602828	0	/home/onur/498/samples/web/jqmovie/poll/templatetags/__init__.py
+/home/onur/498/samples/web/jqmovie/poll/static/jquery.tablesorter.js	1287134299	0	/home/onur/498/samples/web/jqmovie/poll/static/jquery.tablesorter.js

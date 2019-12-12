@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<p align="right">{{ username }},<a href="/logout">Logout</a>,
+			<a href="/admin/">Admin</a></p>
+
+
+Hello choose any movie from list to vote
+or <a href="/add"> add a new movie</a>
+
+{% comment %} Required to add extra filter "lookup" {% endcomment %}
+{% load movie_extra %}
+
+
+<p>{% if message %}
+   <strong>{{ message }}</strong>
+   {% endif %}
+</p>
+
+{% if movielist %}
+    <table border="1" cellspacing="0">
+    <tr>
+    <th></th>
+        <th>title </th><th>director </th>
+        <th>imdb </th><th>cast </th>
+        <th>Status </th>
+    </tr>
+
+{% for m in movielist %}
+    <tr>
+	{% comment %} First column, delete and update links {% endcomment %}
+        <td>
+            <a href="/delete/{{m.id}}">Delete</a>
+            <a href="/update/{{m.id}}">Update</a>
+        </td>
+
+        <td>{{ m.title }}</td><td>{{ m.director }}</td>
+
+        <td>{{ m.imdb }}</td><td>{{ m.cast }}</td>
+
+	{% comment %} Last column contain watch and vote info 
+		m.votes: models.Movie.votes() method call
+		choices: [1,2,3,4,5]
+		votes: dictionary of current user votes
+		votes|lookup:m : votes[m]  (votes.m gives votes['m'])
+		m.watches: models.Movie.watches() method call
+		watchlist: list of movies watched by current user
+        'lookup' is a custom filter defined in templatetags/.
+        Alternative method without custom filter:
+          Send movielist as the list of (movie,vote) pairs in the views.py.
+          update loop above as {% for m,v in movielist %}
+          following if is rewritten simply as {% if v == c %}
+	{% endcomment %}
+        <td>rating: {{ m.votes}} &nbsp;   
+		{% for c in choices %}
+			<a href="/vote/{{m.id}}/{{c}}">
+			{% if votes|lookup:m == c %}
+			<span style="border:solid black 1px">
+			{% else %}
+			<span>
+			{% endif %}
+			{{c}}</span>
+			</a>
+		{% endfor %}<br/>
+	    watches: {{ m.watches }}
+			<a href="/watch/{{m.id}}">
+		{% if m in watchlist %}
+			watched
+		{% else %}
+			not watched
+		{% endif %}
+			</a>
+		</a>
+        </td>
+    </tr>
+{% endfor %}
+    </table>
+{% else %}
+    no movie yet
+{% endif %}
+
+{% endblock %}

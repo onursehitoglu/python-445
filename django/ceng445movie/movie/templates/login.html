@@ -1,0 +1,15 @@
+<html>
+<body>
+{{ message }}
+<form method="post" action="/loginp">
+Username:
+<input type="text" name="username"/>
+<br/>
+Password:
+<input type="password" name="password"/>
+<br/>
+{% csrf_token %}
+<input type="submit" name="login" value="login"/>
+</form>
+</body>
+</html>

@@ -1,0 +1,17 @@
+1.51
+Python
+/home/onur/498/samples/web/dmovie/poll/views.py	1389530549	1	views.py
+/home/onur/498/samples/web/dmovie/poll/forms.py	1389529042	1	NamesField
+/home/onur/498/samples/web/dmovie/poll/tests.py	1389291495	0	/home/onur/498/samples/web/dmovie/poll/tests.py
+/home/onur/498/samples/web/dmovie/poll/static/dmovie.js	1389530794	1	dmovie.js
+/home/onur/498/samples/web/dmovie/urls.py	1389525478	1	urls.py
+/home/onur/498/samples/web/dmovie/poll/templates/registration/activation_email.txt	1389291495	0	/home/onur/498/samples/web/dmovie/poll/templates/registration/activation_email.txt
+/home/onur/498/samples/web/dmovie/poll/__init__.py	1389291495	0	/home/onur/498/samples/web/dmovie/poll/__init__.py
+/home/onur/498/samples/web/dmovie/manage.py	1389291495	0	/home/onur/498/samples/web/dmovie/manage.py
+/home/onur/498/samples/web/dmovie/settings.py	1389293642	0	/home/onur/498/samples/web/dmovie/settings.py
+/home/onur/498/samples/web/dmovie/poll/templates/registration/activation_email_subject.txt	1389291495	0	/home/onur/498/samples/web/dmovie/poll/templates/registration/activation_email_subject.txt
+/home/onur/498/samples/web/dmovie/__init__.py	1389291495	0	/home/onur/498/samples/web/dmovie/__init__.py
+/home/onur/498/samples/web/dmovie/poll/admin.py	1389291495	0	/home/onur/498/samples/web/dmovie/poll/admin.py
+/home/onur/498/samples/web/dmovie/poll/models.py	1389533002	1	models.py
+/home/onur/498/samples/web/dmovie/poll/templatetags/poll_extra.py	1389295257	0	/home/onur/498/samples/web/dmovie/poll/templatetags/poll_extra.py
+/home/onur/498/samples/web/dmovie/poll/templatetags/__init__.py	1389291495	0	/home/onur/498/samples/web/dmovie/poll/templatetags/__init__.py

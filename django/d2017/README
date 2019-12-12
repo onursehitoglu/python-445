@@ -1,0 +1,24 @@
+# Student Information System Example
+
+* Display student list for admin account (ceng)
+* Displays students own record for other users
+* Each user is associated with a Student (only updated in /admin)
+* Admin can add new students
+
+run with
+./manage.py runserver
+
+http://localhost:8000/student
+gives the home page
+
+http://localhost:8000/admin
+gives the administration page
+
+admin account is 'ceng' password 'ceng445ceng'
+Following user/passwords exist:
+onur/ceng445onur
+ali/ceng445ali
+tweety/ceng445tweety
+bugs/ceng445bugs
+sylvester/ceng445syl
+

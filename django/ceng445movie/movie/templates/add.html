@@ -1,0 +1,22 @@
+<html>
+<body>
+<form method="post" action="/{{ action }}">
+{% comment %} uses form facility as_p() to render form {% endcomment %}
+
+<table>
+{{ form.as_table }}
+</table>
+
+{% comment %} update form requires a hidden id to be posted {% endcomment %}
+{% if id %}
+	<input type="hidden" name="id" value="{{id}}"/>
+{% endif %}
+
+{% comment %} required for CSRF {% endcomment %}
+{% csrf_token %}
+
+{% comment %} picks button text based on form, update or add {% endcomment %}
+<input type="submit" name="add" value="{{ button }}"/>
+</form>
+</body>
+</html>

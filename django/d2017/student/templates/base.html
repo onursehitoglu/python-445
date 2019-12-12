@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <h1> CENG 445 Student Information System Demo </h1>
+		<div align="right">
+		{% if request.user.is_authenticated %}
+			User: {{ request.user }} 
+			<a href="/accounts/logout?next=/student">Logout</a>
+		{% endif %}
+		</div>
+		<div>
+		{% block "body" %} 
+        {% endblock %}
+		</div>
+	<a href="/student">Main page</a>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+{% block "body" %}
+<h2> {{opname}} Student </h2>
+<form action="{{formaction}}" method=POST>
+{% csrf_token %}
+<table>
+	<tr><td><b>Id:</b> </td>
+		<td> {% if opname == 'Add' %}
+			<input type="text" size=40 name="sid"></td></tr>
+			 {% else %}
+			{{ student.sid }} </td></tr>
+			 {% endif %}
+	<tr><td><b>Name:</b> </td>
+		<td> <input type="text" size=40 name="name" value="{{student.name}}"/></td></tr>
+	<tr><td><b>Surname:</b> </td>
+		<td> <input type="text" size=40 name="surname" value="{{student.surname}}"/></td></tr>
+	<tr><td><b>User:</b></td>
+		<td><select name="user">
+				<option value="NONE">No user</option>
+				{% for u in userlist %}
+					<option value="{{u.username}}" {% if student.user == u %}selected{% endif %}>
+						{{u.username}}, {{u.first_name}} {{u.last_name}}</option>
+				{% endfor %}
+				
+			</select>
+	<tr><td> &nbsp;</td>
+		<td> <input type="submit" name="submit" value="{{opname}}"/>
+		     <input type="submit" name="submit" value="Cancel"/>
+			</td></tr>
+</table>
+</form>
+{% endblock %}

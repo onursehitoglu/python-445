@@ -1,0 +1,10 @@
+# Movie Application
+ * Each user can add/delete/update movies
+ * Each user can set his/her watched status of a movie
+ * Each user can vote a movie (1 to 5 rating)
+
+There are 4 users: onur, ali, veli, ayse, fatma
+Default passwords are ceng445onur, ceng445ali, ceng445veli,...
+
+Short documentation is under HTML/index.html
+

@@ -1,0 +1,14 @@
+{% load poll_extra %}<?xml version="1.0" encoding="UTF-8"?>
+<return>
+<result>{{ result }}</result>
+{% if objlist %}
+<{{objname}}list>
+{% for obj in objlist %} 
+   <{{objname}} id="{{obj.id}}">
+	{% for col in objcols %} <{{col}}>{{obj|lookup:col}}</{{col}}>
+	{% endfor %}
+    </{{objname}}>
+{% endfor %}
+</{{objname}}list>
+{% endif %}
+</return>

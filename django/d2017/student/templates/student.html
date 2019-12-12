@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block "body" %}
+<h2> List of students </h2>
+<p>
+<a href="/student/add">Create new student</a>
+</p>
+<table border="1" cellspacing="0">
+	<tr><th>id</th><th>name</th><th>surname</th><th>Took</th>
+	{% for student in st %}
+	<tr><td>{{student.sid}}</td><td>{{student.name}}</td>
+		<td>{{student.surname}} 
+		<td> <a href="/student/detail/{{student.sid}}">details</a>
+		     <a href="/student/update/{{student.sid}}">update</a>
+		     <a href="/student/register/{{student.sid}}">register</a></td></tr>
+ 	{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+1.51
+Python
+/home/onur/498/web/django-new/ceng445/movie/apps.py	1482324340	0	/home/onur/498/web/django-new/ceng445/movie/apps.py
+/home/onur/498/web/django-new/ceng445/movie/models.py	1514384545	1	models.py
+/home/onur/498/web/django-new/ceng445/movie/tests.py	1482324791	0	/home/onur/498/web/django-new/ceng445/movie/tests.py
+/home/onur/498/web/django-new/ceng445/movie/migrations/0001_initial.py	1482325380	0	/home/onur/498/web/django-new/ceng445/movie/migrations/0001_initial.py
+/home/onur/498/web/django-new/ceng445/movie/admin.py	1482324825	0	/home/onur/498/web/django-new/ceng445/movie/admin.py
+/home/onur/498/web/django-new/ceng445/movie/forms.py	1514385119	1	forms.py
+/home/onur/498/web/django-new/ceng445/movie/views.py	1514385040	1	views.py
+/home/onur/498/web/django-new/ceng445/movie/migrations/__init__.py	1482324340	0	/home/onur/498/web/django-new/ceng445/movie/migrations/__init__.py
+/home/onur/498/web/django-new/ceng445/movie/templates/registration/activation_email.txt	1482324805	0	/home/onur/498/web/django-new/ceng445/movie/templates/registration/activation_email.txt
+/home/onur/498/web/django-new/ceng445/movie/templatetags/movie_extra.py	1482331520	0	/home/onur/498/web/django-new/ceng445/movie/templatetags/movie_extra.py
+/home/onur/498/web/django-new/ceng445/movie/__init__.py	1482324340	0	/home/onur/498/web/django-new/ceng445/movie/__init__.py
+/home/onur/498/web/django-new/ceng445/movie/templates/registration/activation_email_subject.txt	1482324805	0	/home/onur/498/web/django-new/ceng445/movie/templates/registration/activation_email_subject.txt
+/home/onur/498/web/django-new/ceng445/movie/templatetags/__init__.py	1482331761	0	/home/onur/498/web/django-new/ceng445/movie/templatetags/__init__.py

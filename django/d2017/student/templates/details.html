@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block "body" %}
+<h2> Student Detail</h2>
+<div>
+<b>Name:</b> {{student.name}}
+<b>Surname:</b> {{student.surname}}
+<b>Student Id:</b> {{student.sid}}
+</div><br/>
+
+<div>
+<b>Courses Registered</b><br/>
+<table>
+	{% for course in student.registered.all %}
+	<tr><td>{{course.cid}}</td><td>{{course.name}}</td></tr>
+ 	{% endfor %}
+</table>
+</div><br/>
+
+<div>
+<b>Courses Taken</b><br/>
+<table>
+	{% for course in student.took.all %}
+	<tr><td>{{course.cid}}</td><td>{{course.name}}</td></tr>
+ 	{% endfor %}
+</table>
+</div><br/>
+<a href="/student/register/{{student.sid}}">registration</a>
+{% endblock %}

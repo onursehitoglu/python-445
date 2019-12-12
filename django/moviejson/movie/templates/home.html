@@ -1,0 +1,114 @@
+<html>
+<head>
+<style type="text/css">@import "/static/themes/blue/style.css";</style>
+<style type="text/css">
+
+tbody tr.selectedrow td {
+	background: rgb(150,150,255);
+}
+span.staron {
+	color: white ;
+	padding-left: 5px;
+	padding-right: 9px;
+	padding-top: 0px;
+	padding-bottom: 10px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+        background: url('static/staron.png') no-repeat left top;
+}
+span.star {
+	color: white ;
+	padding-left: 5px;
+	padding-right: 9px;
+	padding-top: 0px;
+	padding-bottom: 10px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+        background: url('static/star.png') no-repeat left top;
+}
+</style>
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="/static/jqmovie.js"></script>
+</head>
+<body>
+<div align="right" id="username">{{username}}, <a href="/logout">Logout</a></div>
+<h1>Movie Party Application</h1>
+Hello choose any movie from list to vote
+<div>
+<button id="newbutton" value="New">New</button>
+<button id="updbutton" value="Update" disabled/>Update</button>
+<button id="delbutton" value="Delete" disabled/>Delete</button>
+</div>
+    <table border="1" cellspacing="0" class="tablesorter">
+    <thead>
+    <tr>
+	<th>Imdb</th>
+        <th>Title </th><th>Director </th>
+        <th>Cast </th>
+        <th>Votes </th><th>Watches</th>
+    </tr>
+    </thead>
+    <tbody id="moviestable">
+    </tbody>
+    </table>
+<!-- editblock -->
+<div id="editblock" style="position:fixed; top:50px; left:50px; display:none; 
+border: solid 1px #a0a0e0; background:#f0f0ff; padding: 20px; ">
+<form id="editform" onSubmit="return false;">
+
+<input type="hidden" name="id"/>
+	<table border="0"> 
+<tr><td><b>title</b></td> 
+    <td><input type="text" name="title" size="50"></td></tr> 
+<tr><td><b>director</b></td> 
+    <td><input type="text" name="director" size="50"></td></tr> 
+<tr><td><b>cast</b></td> 
+    <td><input type="text" name="cast" size="50"></td></tr> 
+<tr><td><b>imdb</b></td> 
+    <td><input type="text" name="imdb" size="50"></td></tr> 
+<tr><td colspan="2" align="right"> 
+<button name="cancelbutton">Cancel</button>
+<button name="actionbutton"></button>
+    </td></tr> 
+	</table>
+</form> 
+</div>
+
+<!-- deleteblock -->
+<div id="deleteblock" style="position:fixed; top:50px; left:50px; display:none; 
+	border: solid 1px #e0a0a0; background:#fff0f0; padding: 20px; ">
+Do you really want to delete the movie <span class="moviename"></span><br/>
+<button id='delnoanswer'>
+No
+</button>
+<button id='delyesanswer'>
+Yes
+</button>
+</div>
+
+<!-- loginblock -->
+<div id="loginblock" style="position:fixed; top:50px; left:50px; display:none; 
+	border: solid 1px #a0e0a0; background:#f0fff0; padding: 20px; ">
+You need to login:
+<form id="loginform" onSubmit="return false;">
+{% csrf_token %}
+<table border="0" cellspacing="0">
+<tr><td><b>Username:</b></td> 
+    <td><input type="text" name="username" size="20"></td></tr> 
+<tr><td><b>Password:</b></td> 
+    <td><input type="password" name="password" size="20"></td></tr> 
+<tr><td colspan="2" align="right"> 
+<button type="button" name="cancelbutton">Cancel</button> 
+<button id="loginbutton">Login</button>
+    </td></tr> 
+	</table>
+</form> 
+
+</div>
+</body>
+</html>

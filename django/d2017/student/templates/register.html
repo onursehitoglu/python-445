@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block "body" %}
+<h2> Student Detail</h2>
+<div>
+<b>Name:</b> {{student.name}}
+<b>Surname:</b> {{student.surname}}
+<b>Student Id:</b> {{student.sid}}
+</div><br/>
+
+<div>
+<b>Add a course</b>
+<form action="/student/register/{{student.sid}}" method="post">
+ {% csrf_token %}
+<select name="course">
+{% for course in courselist %}
+	<option value="{{course.cid}}">{{course.cid}} {{course.name}}</option>
+{% endfor %}
+</select>
+<input type="submit" name="submit" value="Add"/>
+</div>
+
+<div>
+<b>Courses Registered</b><br/>
+<table>
+	{% for course in student.registered.all %}
+	<tr><td>{{course.cid}}</td><td>{{course.name}}</td>
+	<td>		<input type="checkbox" name="drop" value="{{course.cid}}"></td>
+	</tr>
+ 	{% endfor %}
+	<tr><td>&nbsp; </td><td>&nbsp;</td><td>
+		<input type="submit" name="submit" value="Drop"/></tr>
+</table>
+</div><br/>
+</form>
+
+<div>
+<b>Courses Taken</b><br/>
+<table>
+	{% for course in student.took.all %}
+	<tr><td>{{course.cid}}</td><td>{{course.name}}</td></tr>
+ 	{% endfor %}
+</table>
+</div><br/>
+{% endblock %}
