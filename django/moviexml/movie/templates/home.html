@@ -50,8 +50,11 @@ span.dlikebutton {
 <body>
 <div align="right" id="username">{{username}}, <a href="/logout">Logout</a></div>
 <h1>Movie Party Application</h1>
+<p>
 Hello choose any movie from list to vote
-or <span onClick="insertmovie();">add a new movie.</span>
+or <span onClick="insertmovie();" style="border:1pt solid black;background-color:rgb(240,240,250);">add a new movie</span>.
+</p>
+
 {% load poll_extra %}
     <table border="1" cellspacing="0" id="moviestable">
     <tr>

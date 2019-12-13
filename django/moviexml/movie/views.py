@@ -1,7 +1,7 @@
 # Title: views.py
 # Django views
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect,render
 from django.template import RequestContext, loader
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
@@ -19,13 +19,11 @@ from movie.forms import MovieForm
 #  objname - name of the object in XML tags
 #  objcols - coloumns to export in XML
 def getobject(req,obj, objname, objcols):
-	template = loader.get_template('object.xml')
-	context = RequestContext(req, 
-	        {'obj':   obj,
+	context = {'obj':   obj,
 		 'objname': objname,
-		 'objcols': objcols})
-	context['result'] = 'Success' if obj else 'Not Found'
-	return template.render(context)
+		 'objcols': objcols,
+		 'result' : 'Success' if obj else 'Not Found'}
+	return render(req, 'object.xml', context)
 
 # Function: getlist(req, objlist, objname, objcols)
 # return renderered xml for a list of objects
@@ -36,13 +34,11 @@ def getobject(req,obj, objname, objcols):
 #  objname - name of the object in XML tags
 #  objcols - coloumns to export in XML
 def getlist(req,objlist, objname, objcols):
-	template = loader.get_template('list.xml')
-	context = RequestContext(req, 
-	        {'objlist':   objlist,
+	context = {'objlist':   objlist,
 		 'objname': objname,
-		 'objcols': objcols})
-	context['result'] = 'Success' if objlist else 'Not Found'
-	return template.render(context)
+		 'objcols': objcols,
+		'result': 'Success' if objlist else 'Not Found'}
+	return render(req, 'list.xml', context)
 
 # Function: geterror(req, mess)
 # returns an xml error representation
@@ -51,10 +47,11 @@ def getlist(req,objlist, objname, objcols):
 #	req - request object
 #	mess - message as the fail reason
 def geterror(req,mess):
-	template = loader.get_template('error.xml')
-	context = RequestContext(req, 
-		{'result': 'Fail', 'reason': mess })
-	return template.render(context)
+	#template = loader.get_template('error.xml')
+	#context = RequestContext(req, 
+	context =	{'result': 'Fail', 'reason': mess }
+	return render(req, "error.xml",context)
+	#return template.render(context)
 
 # Function: getsuccess(req, mess)
 # returns an xml success representation
@@ -63,19 +60,18 @@ def geterror(req,mess):
 #	req - request object
 #	mess - success message
 def getsuccess(req,mess):
-	template = loader.get_template('error.xml')
-	context = RequestContext(req, 
-		{'result': 'Success', 'reason': mess})
-	return template.render(context)
+	context = {'result': 'Success', 'reason': mess}
+	return render(req, "error.xml", context)
 		  
 
 # Function: home(request)
 # Default home view. Renders 'home.html' template
 def home(request):
-	template = loader.get_template('home.html')
-	context = RequestContext(request, {'username':request.user.username})
+	#template = loader.get_template('home.html')
+	context =  {'username':request.user.username}
 	#context.update(csrf(request))
-	return HttpResponse(template.render(context),'text/html')
+	#return HttpResponse(template.render(context),'text/html')
+	return render(request, "home.html",context)
 	
 
 # Function: list(request)
@@ -150,7 +146,7 @@ def log(request):
 	else:
 		# Return an 'invalid login' error message.
 		return HttpResponse(geterror(request,
-			'Invalid username or password', 'text/xml'))
+			'Invalid username or password'), 'text/xml')
 
 # Function: addmovie(request)
 # View for adding a movie. Add movie form is posted on this view
