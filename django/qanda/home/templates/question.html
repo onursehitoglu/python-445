@@ -1,0 +1,21 @@
+<body>
+<a href="/">Home</a>
+
+<h1>{{ question.qtitle }}</h1>
+<p>
+{% for tag in question.tag.all %}
+<span style="background-color:rgb(220,220,200);">{{tag.text}}</span>
+{% endfor %}</p>
+
+<div style="width: 80%">
+{{ question.qtext }}
+</div>
+
+<h2>Replies</h2>
+<ol>
+{% for r in question.reply_set.all %}
+<li> <p style="width: 60%"> {{r.rtext}} </p></li>
+{% endfor %}
+</ol>
+
+</body>
