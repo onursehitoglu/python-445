@@ -1,0 +1,12 @@
+<body>
+<div style="text-align: right">
+<a href="/">Home</a>
+{% if user.is_authenticated %} Logged in as: {{ user.username }}, <a href="/account/logout">Logout</a>
+{% else %} Guest user, <a href="/account/login?next={{ request.path }}">Login</a>
+{% endif %}
+</div>
+
+<h1>CEng 445 Question and Answer System</h1>
+{% block body %}
+{% endblock %}
+</body>

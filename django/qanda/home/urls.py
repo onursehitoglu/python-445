@@ -18,4 +18,8 @@ urlpatterns = [
     url(r'^$', views.home),
     url(r'^asknew', views.addquestion),
     url(r'^view/(?P<qid>[0-9]+)', views.viewquestion),
+    url(r'^reply/(?P<qid>[0-9]+)', views.replyquestion),
+    url(r'^setvote/(?P<rid>[0-9]+)/(?P<vote>up|down)', views.votereply),
+    url(r'^tag/(?P<tagname>.+)', views.home),
+    url(r'^search/(?P<search>.+)', views.home),
 ]

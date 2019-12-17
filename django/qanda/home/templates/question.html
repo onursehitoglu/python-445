@@ -1,10 +1,9 @@
-<body>
-<a href="/">Home</a>
-
+{% extends "base.html" %}
+{% block body %}
 <h1>{{ question.qtitle }}</h1>
 <p>
 {% for tag in question.tag.all %}
-<span style="background-color:rgb(220,220,200);">{{tag.text}}</span>
+<span style="background-color:rgb(220,220,200);"><a href="/tag/{{tag.text}}">{{tag.text}}</a></span>
 {% endfor %}</p>
 
 <div style="width: 80%">
@@ -14,8 +13,22 @@
 <h2>Replies</h2>
 <ol>
 {% for r in question.reply_set.all %}
-<li> <p style="width: 60%"> {{r.rtext}} </p></li>
+<li> <p style="width: 60%"> {{r.rtext}} </p> <b>{{ r.uppers.count }}</b>
+{% if user.is_authenticated %}
+<a href="/setvote/{{ r.id }}/up">
+{% if r.up %} <b>Up</b>  {% else %} Up {% endif %}</a>
+<a href="/setvote/{{ r.id }}/down">
+{% if r.down %} <b>Down</b>  {% else %} Down {% endif %}</a>
+{% endif %}</li>
 {% endfor %}
 </ol>
-
-</body>
+{% if user.is_authenticated %}
+<form action="/reply/{{ question.id }}" method="post">
+<b style="vertical-align: top">Text:</b>
+<textarea name="rtext" rows="10" cols="60">
+</textarea>
+{% csrf_token %}
+<input type="submit" value="Reply"/>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,8 +1,8 @@
-<body>
-<h1>CEng 445 Question and Answer System</h1>
-
+{% extends "base.html" %}
+{% block body %}
+{% if user.is_authenticated %} 
 Ask new question:
-<form action="asknew" method="post">
+<form action="/asknew" method="post">
 <b>Title:</b> <input type="text" name="title" size=100/><br/>
 <b>Tags:</b><input type="text" name="tags" size=50/> (comma seperated) <br/>
 <b style="vertical-align: top">Text:</b>
@@ -11,10 +11,10 @@ Ask new question:
 {% csrf_token %}
 <input type="submit" value="Ask"/>
 </form>
-
+{% endif %}
 <ol>
 {% for question in questions %}
-<li> <a href="view/{{question.id}}">{{ question.qtitle }}</a> <b>{{ question.reply_set.count }}</b> replies
+<li> <a href="/view/{{question.id}}">{{ question.qtitle }}</a> <b>{{ question.reply_set.count }}</b> replies
 	<br/>
 	 {% for tag in question.tag.all %}
 	<span>{{tag.text}}</span>
@@ -23,3 +23,4 @@ Ask new question:
 {% endfor %}
 </ol>
 </body>
+{% endblock %}

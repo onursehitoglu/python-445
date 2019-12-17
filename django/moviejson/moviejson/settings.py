@@ -25,7 +25,7 @@ SECRET_KEY = 'xv33xj8%(7gjrid!&z(83fdk)h$82e0i2i54uh4c!)a8+x@&^+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sehitoglu.web.tr']
+#ALLOWED_HOSTS = ['sehitoglu.web.tr']
 
 
 # Application definition

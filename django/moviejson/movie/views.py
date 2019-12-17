@@ -2,7 +2,6 @@
 # Django views (json)
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-#from django.template import RequestContext, loader
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -16,9 +15,6 @@ import json
 # Function: home(request)
 # Default home view. Renders 'home.html' template
 def home(request):
-	#template = loader.get_template('home.html')
-	#context = RequestContext(request, {'username':request.user.username})
-	#context.update(csrf(request))
 	return render(request, 'home.html',{'username':request.user.username})
 	
 # Function: getmovie(movie)
