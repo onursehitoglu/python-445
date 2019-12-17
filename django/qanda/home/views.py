@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from home.models import Question,Reply,Tag
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -44,15 +45,18 @@ def votereply(request, rid, vote):
 		pass
 	return redirect(viewquestion,r.replyto.id)
 
+@login_required
 def replyquestion(request, qid):
+	print(request.user, qid)
 	try:
 		q = Question.objects.get(id = qid)
 		r = Reply.objects.create(rtext = request.POST['rtext'], replyto = q,
 								 user = request.user)
-	except:
+	except ObjectDoesNotExist:
 		pass
 	return redirect(viewquestion,qid)
 
+@login_required(redirect_field_name=None)
 def addquestion(request):
 	q = Question.objects.create(qtitle = request.POST['title'], 
 								qtext = request.POST['qtext'], user=request.user)
