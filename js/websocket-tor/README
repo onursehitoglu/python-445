@@ -1,0 +1,8 @@
+A simple auction site. Users can add/remove items for
+sale. Others connecting site can increment bids for items
+and owner can sell. All requests, notifications and
+model updates go over websockets.
+
+Start with 
+python3 sellbuy.py --port 8000
+

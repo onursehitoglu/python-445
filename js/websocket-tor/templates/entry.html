@@ -1,0 +1,10 @@
+<tr class="entry" id="{{ eid }}">
+<td class="ename">{{entry["name"]}}</td>
+<td class="eprice">{{entry["price"]}}</td>
+<td class="euser">{{entry["user"]}}</td>
+<td class="ebidder"> {%if "bidder" in entry %}
+{{ entry["bidder"] }} {% else %}
+no bidder yet {% end %}
+</td>
+<td class="actions"><button onClick="incrementPrice(this);">Increment</button>
+</td></tr>

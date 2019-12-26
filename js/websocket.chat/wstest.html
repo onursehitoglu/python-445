@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket demo</title>
+    </head>
+    <body>
+		<div style="width:300px;display:inline-block;vertical-align:top">
+		<table id="stable"><tr><th colspan="2">Subscriptions</th></tr>
+		</table>
+		<input id="newid" value="" onKeyPress="sendenter(event,addNewId);"/><button onClick="addNewId();">Add</button></br>
+		<div id="status" style="background-color: #ffa0a0;">not connected</div>
+		</div>
+		<div style="width:400px; display:inline-block; vertical-align:top">
+		<input id="newmess" value="" onKeyPress="sendenter(event,addMess);"/><button onClick="addMess();">Send</button></br>
+
+		<ul id='messagelist'>
+		</ul>
+		<div>
+        <script>
+		var serveripport = '127.0.0.1:5678'
+		function sendenter(e, f) {
+			if (e.keyCode == 13) { f();}
+			return false;
+		}
+		function addMess() {
+			var el = document.getElementById('newmess');
+			var inp = el.value;
+			var m;
+			if ( /^[0-9]+:.*$/.test(inp) ) {
+				var t = inp.split(':',2);
+				m = { id: t[0], message: t[1]};
+			} else {
+				m = { id: '*', message: inp};
+			}
+			ws.socket.send(JSON.stringify(m));
+			el.value = "";
+		}
+		function addNewId() {
+			// add a new message id to listen to
+			var newel = document.getElementById("newid");
+			var newid = newel.value;
+			if (ws.waitids.indexOf(newid) >= 0) // already listening
+				return false;
+
+			ws.waitids.push(newid);
+			// restart websocket with new information
+			ws.createwebsocket();
+			newel.value = "";
+
+			// update DOM with new subscription
+			var row=document.createElement("tr");
+			row.innerHTML='<td>' + newid + '</td><td><button onClick=\'deleteId("' + newid + '");\'>Remove</button></td></tr>';
+			row.setAttribute('id','row' + newid);
+			document.getElementById("stable").appendChild(row);
+			
+		}
+
+		function deleteId(did) {
+			var row = document.getElementById('row' + did);
+			var pos = ws.waitids.indexOf(did);
+
+			if (row)
+				row.remove();
+
+			if (pos >= 0) {
+				ws.waitids.splice(pos,1);
+				// restart websocket with new information
+				ws.createwebsocket();
+			}	
+		}
+
+
+		function wseventhandler (event) {
+			var messages = JSON.parse(event.data);
+			console.log(messages)
+			if (!Array.isArray(messages)) {
+				messages = [messages];
+			}
+			for ( var mid in messages) {
+            	var messlist = document.getElementById('messagelist'),
+            		messitem = document.createElement('li');
+				messitem.innerHTML = '<strong>'+messages[mid].id+'</strong> '+ messages[mid].message;
+            	messlist.appendChild(messitem);
+			};
+		}
+		function Ws (ip) {
+			this.socket = undefined;
+			this.waitids = [];
+		}
+		Ws.prototype.createwebsocket = function () {
+			var status = document.getElementById('status');
+			if (this.socket)	// if already connected close it and reopen
+				this.socket.close();
+			if (this.waitids.length < 1)	// no subsciption
+				return;	
+			// create a web socket
+        	var socket = new WebSocket('ws://' + serveripport);
+			var wids = this.waitids;
+			socket.onopen = function() {
+				// send id list for notifications
+				socket.send(JSON.stringify(wids));
+				status.textContent = 'Connected';
+				status.setAttribute('style','background-color: #a0ffa0');
+			}
+			socket.onerror = function() {
+				status.textContent = 'Connection failed';
+				status.setAttribute('style','background-color: #ffa0a0');
+			}
+			socket.onclose = function() {
+				status.textContent = 'Connection closed';
+				status.setAttribute('style','background-color: #ffa0a0');
+			}
+
+        	socket.onmessage = wseventhandler;
+			this.socket = socket;
+		}
+		var ws = new Ws();
+        </script>
+    </body>
+</html>
