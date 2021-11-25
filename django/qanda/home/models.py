@@ -12,14 +12,14 @@ class Question(models.Model):
 	qtitle = models.CharField(max_length=100)
 	qtext = models.CharField(max_length=1024)
 	tag = models.ManyToManyField(Tag)
-	user = models.ForeignKey(User,null=True)
+	user = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)
 	def __str__(self):
 		return "{}: {}".format(self.id,self.qtitle)
 
 class Reply(models.Model):
 	rtext = models.CharField(max_length=1024)
-	replyto = models.ForeignKey(Question)
-	user = models.ForeignKey(User,null=True)
+	replyto = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
+	user = models.ForeignKey(User,null=True,on_delete=models.DO_NOTHING)
 	uppers = models.ManyToManyField(User, related_name = 'upped')
 	def __str__(self):
 		return "{}[{}]: {}".format(self.id, self.replyto.id, self.rtext[:20])
