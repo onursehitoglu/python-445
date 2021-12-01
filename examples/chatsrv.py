@@ -36,9 +36,9 @@ class RDAgent(Thread):
 		inp = self.conn.recv(1024)
 		while inp:
 			self.chat.newmessage(inp)
-			print 'waiting next',self.claddr
+			print('waiting next',self.claddr)
 			inp = self.conn.recv(1024)
-		print 'client is terminating'
+		print('client is terminating')
 		conn.close()
 
 class WRAgent(Thread):
@@ -51,7 +51,7 @@ class WRAgent(Thread):
 	def run(self):
 		oldmess = self.chat.getmessages()
 		self.current += len(oldmess)
-		self.conn.send('\n'.join(oldmess))
+		self.conn.send('\n'.join([i.decode() for i in oldmess]).encode())
 		notexit = True
 		while notexit:
 			self.chat.lock.acquire()
@@ -60,13 +60,13 @@ class WRAgent(Thread):
 			oldmess = self.chat.getmessages(self.current)
 			self.current += len(oldmess)
 			try:
-			  self.conn.send('\n'.join(oldmess))
+			  self.conn.send('\n'.join([i.decode() for i in oldmess]).encode())
 			except:
 			  notexit = False
 			
 
 if len(sys.argv) != 2:
-	print 'usage: ',sys.argv[0],'port'
+	print('usage: ',sys.argv[0],'port')
 	sys.exit(-1)
 
 
@@ -82,7 +82,7 @@ chatroom = Chat()
 while True:
 	conn, addr = s.accept()
 
-	print 'Connected by', addr
+	print('Connected by', addr)
 	a = RDAgent(conn,addr,chatroom)
 	b = WRAgent(conn,addr,chatroom)
 	a.start()
