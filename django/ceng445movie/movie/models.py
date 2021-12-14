@@ -63,8 +63,8 @@ def validate_vote(val):
 class Vote(models.Model):
 	class Meta:
 		unique_together = (('user','movie'),)
-	user = models.ForeignKey(User)
-	movie = models.ForeignKey(Movie)
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 	vote = models.IntegerField(validators=[validate_vote])
 
 	def __str__(self):

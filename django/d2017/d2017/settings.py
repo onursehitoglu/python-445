@@ -25,7 +25,7 @@ SECRET_KEY = '-*b)k@dwq_m+hegr77row68ea#2qdy!1vt&7*_5659x*y_mee)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sehitoglu.web.tr','144.122.71.79', '127.0.0.1']
+ALLOWED_HOSTS = ['sehitoglu.web.tr','144.122.71.79', '127.0.0.1', 'localhost']
 
 
 # Application definition

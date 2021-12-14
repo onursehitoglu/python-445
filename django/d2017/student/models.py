@@ -35,10 +35,10 @@ class Student(models.Model):
 	sid = models.CharField(max_length=10, primary_key = True)
 	name = models.CharField(max_length=30)
 	surname = models.CharField(max_length=30)
-	department = models.ForeignKey(Department,blank=True, null=True)
+	department = models.ForeignKey(Department,on_delete = models.CASCADE,blank=True, null=True)
 	took = models.ManyToManyField(Course,related_name = 'taken')
 	registered = models.ManyToManyField(Course,related_name = 'enrolled')
-	user = models.OneToOneField(User, null = True)
+	user = models.OneToOneField(User, on_delete = models.CASCADE, null = True)
 
 	def __str__(self):
 		return ' '.join([str(self.sid),str(self.name),str(self.surname)])

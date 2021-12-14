@@ -20,7 +20,7 @@ def home(request):
 	# this is longer version for authentication control
         # @login_required decorator does the same job
 
-	if  not request.user.is_authenticated():
+	if  not request.user.is_authenticated:
 		return redirect("/login")
 
 	# all movies as a list

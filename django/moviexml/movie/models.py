@@ -61,10 +61,10 @@ class Vote(models.Model):
 		unique_together = (('user','movie'),)
 	# Variable: user
 	# A foreign key to User class in django.contrib.auth
-	user = models.ForeignKey(User)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	# Variable: movie
 	# A foreign key to <Movie> model class
-	movie = models.ForeignKey(Movie)
+	movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 	# Variable: vote
 	# vote of the user on the movie, an integer in [1,5]
 	vote = models.IntegerField(validators=[validate_vote])
