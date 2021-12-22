@@ -1,0 +1,6 @@
+.product {
+	height: 100px;
+	width: 200px;
+	display: inline-block;
+	border: solid gray 1px;
+}

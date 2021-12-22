@@ -1,0 +1,15 @@
+<html>
+	<head><title>WEb shop example</title>
+		<link rel="stylesheet" href="/static/shop.css"/>
+	</head>
+<body>
+	<a href="/basket">My Basket</a><br/>
+
+	{% for product in products %}
+	<div class="product">
+	{{ product.name  }}<br/>
+	Price: {{ product.price }}
+	</div>
+	{% endfor %} 
+</body>
+</html>

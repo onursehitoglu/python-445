@@ -1,0 +1,35 @@
+<html>
+	<head><title>WEb shop basket</title>
+		<link rel="stylesheet" href="/static/shop.css"/>
+	</head>
+<body>
+	User: {{ user }}<br/>
+
+	<!--  o.member
+	     1. o.member
+	     2. o['member']
+	     3. if o.member is callable
+	         omember()
+	-->
+	<table border="1">
+	<tr>
+	<th>Name</th>
+	<th>Price</th>
+	<th>Count</th>
+	<th>Amount</th>
+	{% for entry in basket %}
+	<tr><td>
+			{{ entry.name }}</td>
+		<td>{{ entry.price }}</td>
+		<td>{{ entry.count  }}</td>
+		<td>{{ entry.amount }}</td>
+	</tr>
+	{% endfor %} 
+	<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td> {{ total }}</td>
+	</table>
+</body>
+</html>
