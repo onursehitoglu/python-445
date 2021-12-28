@@ -1,0 +1,22 @@
+<html>
+<head><title>Product Detail</title></head>
+<body>
+<a href="/">Back</a>
+<form method="POST" action="/prodpost/">
+<table border="1" cellspacing="0">
+{% csrf_token %}
+{{ form.as_table }}
+<tr><td>&nbsp;</td>
+<td style="align: right;">
+{% if operation == 'insert' %}
+<input type="submit" name="insert" value="Insert new product"/>
+{% else %}
+<input type="hidden" name="pid" value="{{ pid }}"/>
+<input type="submit" name="update" value="Update product"/>
+<input type="submit" name="delete" value="Remove the product"/>
+{% endif %}
+</td></tr>
+<table>
+</form>
+</body>
+</html>

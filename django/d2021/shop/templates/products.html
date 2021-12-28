@@ -1,15 +1,14 @@
-<html>
-	<head><title>WEb shop example</title>
-		<link rel="stylesheet" href="/static/shop.css"/>
-	</head>
-<body>
-	<a href="/basket">My Basket</a><br/>
-
+{% extends "base.html" %}
+{% block appbody %}
 	{% for product in products %}
 	<div class="product">
-	{{ product.name  }}<br/>
-	Price: {{ product.price }}
+	<a href="/product/{{ product.id }}">
+	{{ product.name  }} </a> <br/>
+	Price: {{ product.price }}<br/>
+	{% if user %}
+	<a href="/add/{{ product.id }}">Add to basket</a>
+	{% endif %}
 	</div>
 	{% endfor %} 
-</body>
-</html>
+
+{% endblock %}

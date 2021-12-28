@@ -11,25 +11,25 @@
 	     3. if o.member is callable
 	         omember()
 	-->
-	<table border="1">
+	<table>
 	<tr>
-	<th>Name</th>
-	<th>Price</th>
-	<th>Count</th>
-	<th>Amount</th>
+	<th style="border-bottom: 1px solid black">Name</th>
+	<th style="border-bottom: 1px solid black">Price</th>
+	<th style="border-bottom: 1px solid black">Count</th>
+	<th style="border-bottom: 1px solid black">Amount</th>
 	{% for entry in basket %}
 	<tr><td>
 			{{ entry.name }}</td>
-		<td>{{ entry.price }}</td>
-		<td>{{ entry.count  }}</td>
-		<td>{{ entry.amount }}</td>
+		<td style="text-align: right">{{ entry.price }}</td>
+		<td style="text-align: right">{{ entry.count  }}</td>
+		<td style="text-align: right">{{ entry.amount }}</td>
 	</tr>
 	{% endfor %} 
-	<tr>
+	<tr style="border: 0">
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
-	<td> {{ total }}</td>
+	<td style="border-top: 1px solid black;text-align:right"> {{ total }}</td>
 	</table>
 </body>
 </html>

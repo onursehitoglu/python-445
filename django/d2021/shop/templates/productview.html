@@ -1,0 +1,16 @@
+<html>
+<head><title>Product Detail</title></head>
+<body>
+<a href="/">Back</a>
+{% if product %}
+<table>
+<tr><td>Name:</td><td> {{ product.name }} </td></tr>
+<tr><td>Price:</td><td> {{ product.price }} </td></tr>
+<tr><td>Description:</td><td> {{ product.description }} </td></tr>
+<tr><td>Quantity:</td><td> {{ product.quantity }} </td></tr>
+</table>
+{% else %}
+<h3>Product is not found</h3>
+{% endif %}
+</body>
+</html>

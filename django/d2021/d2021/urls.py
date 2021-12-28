@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.conf.urls import url
 from shop import views
 
 urlpatterns = [
     path('', views.index),
     path('basket/', views.basket),
+    url('product/(?P<pid>[0-9]+)?', views.product),
+    url('add/(?P<pid>[0-9]+)?', views.add),
+    url('prodpost/', views.prodpost),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

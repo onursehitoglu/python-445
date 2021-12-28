@@ -1,0 +1,22 @@
+<html>
+	<head><title>Web shop example</title>
+		<link rel="stylesheet" href="/static/shop.css"/>
+	</head>
+<body>
+	<div style="align: right">
+	{% if user.is_anonymous %}
+		<a href="/accounts/login?next=/">Login</a><br/>
+	{% else %}
+		{{ user }}
+		<a href="/basket">My Basket</a><br/>
+		<a href="/accounts/logout">Logout</a><br/>
+	{% endif %}
+	</div>
+
+	<p class="message">
+		{{ message }}
+	<p>
+{% block appbody %}
+{% endblock %}
+</body>
+</html>

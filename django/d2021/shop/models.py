@@ -15,7 +15,7 @@ class Basket(models.Model):
 	created = models.DateField(auto_now_add = True)
 	updated = models.DateField(auto_now = True)
 	def __str__(self):
-		return self.user
+		return str(self.user) 
 	
 class Entry(models.Model):
 	product = models.ForeignKey(Product, on_delete = models.CASCADE)
