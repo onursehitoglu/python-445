@@ -602,17 +602,17 @@ traverse(document.body)
 browsers events handler functions.
 \item Either defined as HTML attribute or set later on DOM:\\
 	\lstinline!<img .. onclick="JS code here">!\\
-	\lstinline!el.addEventListener("onclick" , function () { ... })!
+	\lstinline!el.addEventListener("click" , function () { ... })!
 \item Multiple event listeners can be added and remove on DOM:\\
-	\lstinline!el.removeEventListener("onclick" , function () { ... })!
-\item
+	\lstinline!el.removeEventListener("click" , function () { ... })!
+\item for event type \structure{XYZ} attribute name is \structure{onXYZ}
 \begin{itemize}
-\item \lstinline!onclick!: mouse click
-\item \lstinline!ondblclick!: mouse double click
-\item \lstinline!onmouseover!: mouse pointer is over
-\item \lstinline!onkeypress!: keyboard key pressed (event object paramater)
-\item \lstinline!onbeforeload!: when object starts to be loaded
-\item \lstinline!onload!: when object is loaded
+\item \lstinline!click!: mouse click
+\item \lstinline!dblclick!: mouse double click
+\item \lstinline!mouseover!: mouse pointer is over
+\item \lstinline!keypress!: keyboard key pressed (event object paramater)
+\item \lstinline!beforeload!: when object starts to be loaded
+\item \lstinline!load!: when object is loaded
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -621,11 +621,11 @@ browsers events handler functions.
 \begin{itemize}
 \item Events for form elements:
 \begin{itemize}
-\item \lstinline!onchange!: when form element content changed
-\item \lstinline!onselect!: when form element is selected
-\item \lstinline!onfocus!: when form element gets focus
-\item \lstinline!onblur!: when form element loses focus
-\item \lstinline!onsubmit!: when form is submitted. Function
+\item \lstinline!change!: when form element content changed
+\item \lstinline!select!: when form element is selected
+\item \lstinline!focus!: when form element gets focus
+\item \lstinline!blur!: when form element loses focus
+\item \lstinline!submit!: when form is submitted. Function
 	should return \lstinline!true! if default action (submit)
 	should follow. Calling \lstinline!el.submit()! will
 	explicitly submit the form data.
