@@ -690,6 +690,142 @@ Age: <input type="text" name="Age"
 \end{lstlisting}
 \end{frame}
 
+\section{Execution Model}
+\begin{frame}
+\frametitle{Execution Model}
+\begin{itemize}
+\item Javascript executes in a single thread/process (thread per browser tab/thread per nodejs connection)
+\item Main interpreter code is an \structure{Event Loop} where a queue of messages are processed one message at a time. 
+\item Each message in the queue is a Javascript function pointer. A new stack frame is created and function is called.
+\item Browser pushes scripts in HTML code into the message queue on page load.
+\item Each message is \structure{run to the completion}. Then next message is processed.
+\item Browser events, timed events and callbacks push new messages.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Execution is never preempted. Infinite loops and long running functions should be avoided.
+\item Most I/O tasks works with call backs
+\item Callback hell. Example: chain 3 functions with callbacks and possible error values:
+\begin{lstlisting}
+	getDocument(docA, vA => {
+		if (vA) {
+			getDocument(docB, vB => {
+				if (vB) {
+					getDocument(docC, vC => {
+						if (vC) {
+							// do something usefull with  vA + vB + vC
+						} else { // handle error 
+						}
+					})
+				} else { // handle error 
+				}})
+		} else { // handle error
+		}})
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Run to completion is tricky:
+\begin{lstlisting}
+function getsum(userinput) {
+	var sum = 0
+	for (c of userinput) { // userinput is a list of items user selected
+		makedbquery(c, v => {
+			sum += v
+		})} 
+	return sum
+}
+console.log(getsum(['a','b','c']); // WON'T WORK!!!
+\end{lstlisting}
+\item  Solution: convert to callback style with recursion
+\begin{lstlisting}
+function getsum2(userinput, cb) {
+	if (userinput.length == 0) { cb(0); }
+	else {
+		makedbquery(userinput[0], v => {
+			getsum2(userinput.slice(1), sum => {
+				cb(v + sum)
+			})		
+		})
+	}
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Promises}
+\begin{itemize}
+\item \structure{Promise} is a class defining an asynchronous event returning a value in future. Initially in pending state. When value is available, calls the  resolving action.
+\begin{lstlisting}
+function findPerson(name) {
+	return new Promise(resolve => {
+		getidfromname(name, v => resolve(v))
+	 })
+}
+function getList(id) {
+	return new Promise(resolve => {
+		getclistfromid(id, v => resolve(v))
+	})
+}
+findPerson('onursehitoglu')
+	.then(getList)
+	.then(lst => { console.log(lst) })
+	.catch(err => { console.log(err)})
+\end{lstlisting}
+\item Promises give clear output
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Independent promises
+\begin{lstlisting}
+function getsum(userinput) {
+	return new Promise(resolve => {
+		// assume following give a list of promises
+		var plist = map(makedbquery, userinput)
+		Promise.all(plist).then( vlist => {
+			// all promises resolved and gave a value list
+			// resolve as the sum
+			resolve(sum(vlist))
+		}
+	}
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{async/await}
+\begin{itemize}
+\item \structure{async}/\structure{await} keywords make
+asynchronous programming much more easier.
+\item define all asynchronous functions with \structure{async} prefix
+\item call all asynchrouse functions with \structure{await} prefix
+\item rest of the function is put into a message (callback) and inserted in queue when asynchronous function completes.
+\item Javascript make all necessary conversions.
+\begin{lstlisting}
+async function wait(t) {
+	return new Promise(resolve => {
+		setTimeout(resolve, t)
+	})
+}
+main = async () => {
+	await wait(1000);
+	console.log('hello')
+	await wait(1000);
+	console.log('world')
+}
+main()
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
 \section{AJAX}
 \begin{frame}
 \frametitle{AJAX}
