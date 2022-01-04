@@ -362,7 +362,7 @@ for missing members for the object. So that a single copy per function/class mai
 function Counter() { this.value = 0 }
 
 Counter.prototype.get = function () { return this.value }
-Counter.prototype.increment = function () { this.value++ }
+Counter.prototype.incr = function () { this.value++ }
 
 c = new Counter() ; d = new Counter() ; e = new Counter()
 c.incr()
@@ -565,9 +565,9 @@ li1.appendChild(document.createTextNode("apple"))
 li2.appendChild(document.createTextNode("banana"))
 li3.appendChild(document.createTextNode("orange"))
 var ul = document.createElement("UL")
-ul.appendChild(l1)
-ul.appendChild(l2)
-ul.appendChild(l2)
+ul.appendChild(li1)
+ul.appendChild(li2)
+ul.appendChild(li2)
 document.body.appendChild(ul)
 \end{lstlisting}
 \end{frame}
@@ -788,19 +788,19 @@ findPerson('onursehitoglu')
 function getsum(userinput) {
 	return new Promise(resolve => {
 		// assume following give a list of promises
-		var plist = map(makedbquery, userinput)
+		var plist = userinput.map(makedbquery)
 		Promise.all(plist).then( vlist => {
 			// all promises resolved and gave a value list
 			// resolve as the sum
-			resolve(sum(vlist))
-		}
-	}
+			resolve(vlist.reduce( (v,r) => { return v+r}))
+		})
+	})
 }
 \end{lstlisting}
 \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{async/await}
 \begin{itemize}
 \item \structure{async}/\structure{await} keywords make
@@ -812,8 +812,7 @@ asynchronous programming much more easier.
 \begin{lstlisting}
 async function wait(t) {
 	return new Promise(resolve => {
-		setTimeout(resolve, t)
-	})
+		setTimeout(resolve, t) })
 }
 main = async () => {
 	await wait(1000);
