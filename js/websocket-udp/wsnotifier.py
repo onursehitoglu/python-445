@@ -136,8 +136,7 @@ class GetNotifications:
 		print('Received %r from %s' % (mess, addr))
 
 		
-@asyncio.coroutine 
-def websockethandler(websocket, path):
+async def websockethandler(websocket, path):
 	''' function sending notifications to browsers
         it expects browser to send an identification string
 		later all notifications for this id will be sent to
@@ -150,7 +149,7 @@ def websockethandler(websocket, path):
 		print(http.cookies.SimpleCookie(websocket.request_headers['Cookie']))
 
 	# get the list of ids to follow from browser
-	reqlist = yield from websocket.recv()
+	reqlist = await websocket.recv()
 	idlist = json.loads(reqlist)
 	
 	print('connected', idlist)
@@ -168,9 +167,9 @@ def websockethandler(websocket, path):
 	try:
 		while True:
 			# wait on lock. UDP notifier will release me to enter
-			yield from mycond.acquire()
-			with (yield from mycond):
-				yield from websocket.send(notifications.newmessages(idlist))
+			await mycond.acquire()
+			await websocket.send(notifications.newmessages(idlist))
+
 	except Exception as e:
 		print(e)
 	finally:
@@ -178,7 +177,7 @@ def websockethandler(websocket, path):
 		for myid in idlist:
 			notifications.unregister(mycond, myid)
 		notifications.disconnect(mycond)
-		websocket.close()
+		await websocket.close()
 
 
 #enable logging
@@ -214,3 +213,4 @@ ws_server = websockets.serve(websockethandler, ws_addr[0], ws_addr[1], loop = lo
 asyncio.ensure_future(ws_server)
 loop.run_until_complete(udplistener)
 loop.run_forever()
+

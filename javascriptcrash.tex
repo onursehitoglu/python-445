@@ -351,7 +351,7 @@ function BSTree() {
 \end{lstlisting}
 \end{frame}
 
-\subsection{Function Prototypes and Inheritance}
+\subsection*{Function Prototypes and Inheritance}
 \begin{frame}[fragile]
 \frametitle{Function Prototype}
 \begin{itemize}
@@ -426,7 +426,7 @@ c = new Circle(10,10,5); c.move(30,20)
 \end{lstlisting}
 \end{frame}
 
-\subsection{EcmaScript6 class}
+\subsection*{EcmaScript6 class}
 \begin{frame}[fragile]
 \begin{itemize}
 \item Since EcmaScript 6 (2016) \lstinline!class! definitions are implemented as
@@ -506,8 +506,8 @@ Most important members of \lstinline!document! are:
 the element with given \lstinline!id=...! attribute in the document.
 \item \lstinline!document.getElementsByClassName! 
 \lstinline!.getElementsByTagName!: searches and returns all elements with given \lstinline!class=...! attribute and given HTML tag respectively.
-\item
-\lstinline!document.children[0]!: Top element, \lstinline!<html>! of the document.
+\item \lstinline!document.querySelector! selects elements based on \structure{CSS selectors}.
+\lstinline!document.querySelector('div.student > ul')! selects \lstinline!ul! elements that are immediate child of a \lstinline!student! class \lstinline!div!.
 \end{itemize}
 \end{frame}
 
@@ -602,10 +602,10 @@ traverse(document.body)
 browsers events handler functions.
 \item Either defined as HTML attribute or set later on DOM:\\
 	\lstinline!<img .. onclick="JS code here">!\\
-	\lstinline!el.addEventListener("click" , function () { ... })!
-\item Multiple event listeners can be added and remove on DOM:\\
-	\lstinline!el.removeEventListener("click" , function () { ... })!
-\item for event type \structure{XYZ} attribute name is \structure{onXYZ}
+	\lstinline!el.addEventListener("click" , function (ev) { ... })!
+\item Multiple event listeners can be added and removed on DOM:\\
+	\lstinline!el.removeEventListener("click" , functionname)!
+\item for event type \structure{X}, attribute name is \structure{onX}
 \begin{itemize}
 \item \lstinline!click!: mouse click
 \item \lstinline!dblclick!: mouse double click
@@ -670,7 +670,8 @@ function checkform() {
 Continued:
 \begin{lstlisting}
 ...
-<form id="myform" action="..." method="post">
+<form id="myform" action="..." method="post"
+       onsubmit="return checkform()">
 Name: <input type="text" name="Name" 
              onblur="checkname('Name')"/>
       <span id="Namemsg"></span>
@@ -683,8 +684,7 @@ Age: <input type="text" name="Age"
             onblur="checkage('Age')"/>
      <span id="Agemsg"></span>
 <br/>
-<input type="submit" name="submit" value="Send" 
-       onclick="return checkform()">
+<input type="submit" name="submit" value="Send" >
 </form>
 ...
 \end{lstlisting}
@@ -703,6 +703,7 @@ Age: <input type="text" name="Age"
 \end{itemize}
 \end{frame}
 
+\subsection*{Callbacks}
 \begin{frame}[fragile]
 \begin{itemize}
 \item Execution is never preempted. Infinite loops and long running functions should be avoided.
@@ -757,6 +758,7 @@ function getsum2(userinput, cb) {
 \end{itemize}
 \end{frame}
 
+\subsection*{Promise}
 \begin{frame}[fragile]
 \frametitle{Promises}
 \begin{itemize}
@@ -777,7 +779,7 @@ findPerson('onursehitoglu')
 	.then(lst => { console.log(lst) })
 	.catch(err => { console.log(err)})
 \end{lstlisting}
-\item Promises give clear output
+\item Promises give more clear code
 \end{itemize}
 \end{frame}
 
@@ -800,13 +802,14 @@ function getsum(userinput) {
 \end{itemize}
 \end{frame}
 
+\subsection*{async/await}
 \begin{frame}[fragile]
 \frametitle{async/await}
 \begin{itemize}
 \item \structure{async}/\structure{await} keywords make
 asynchronous programming much more easier.
 \item define all asynchronous functions with \structure{async} prefix
-\item call all asynchrouse functions with \structure{await} prefix
+\item call all asynchrous functions with \structure{await} prefix
 \item rest of the function is put into a message (callback) and inserted in queue when asynchronous function completes.
 \item Javascript make all necessary conversions.
 \begin{lstlisting}
@@ -825,6 +828,43 @@ main()
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+\begin{itemize}
+\item structure{async/await} works as a syntactic sugar. Simplified description:\\
+\lstinline!async function f(...) {  return expr}! is equivalent to:\\
+\lstinline!    function f(...) { return new Promise(res => res(expr)) }!\\[1em]
+
+\lstinline!{let v = await f(...); st1 ; st2}! is equivalent to:\\
+\lstinline!    {f(...).then( ret => {let v = ret; st1; st2})}!
+\item Previous slide without \structure{await}
+\begin{lstlisting}
+main = () => {
+	wait(1000)
+		.then(() => {
+			console.log('hello')
+			wait(1000)
+				.then(() => {console.log('world')})
+		})
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item \lstinline!getsum! \structure{async/await} version
+\begin{lstlisting}
+async function getsum(userinput) {
+	var sum = 0
+	for (c of userinput) { // userinput is a list of items user selected
+		sum += await makedbquery(c)
+	}
+	return sum
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
 \section{AJAX}
 \begin{frame}
 \frametitle{AJAX}
@@ -833,11 +873,8 @@ main()
 \item Browser script can make HTTP requests to web server to 
 load/update data dynamically.
 \item \lstinline!XMLHttpRequest! object does the job.
-\item Synchronous operation: block until request completed and result is taken.
-	\textbf{blocks interpreter!}. 
-\item Asynchronous operation: gets a callback function and function is called
-	by browser when request status changes.
-\item \lstinline!open(method,path, async)! method sets up the connection
+\item Works in synchronous and asynchronous modes. Former should be avoided, blocks until request completed and result is taken. Asynchronous mode works with a callback.
+\item \lstinline!open(method,path, async)! method sets up the connection object.
 \item \lstinline!send()! will initiate the request
 \item On success \lstinline!response! contains the server response.
 \item If server sends XML document \lstinline!responseXML! contains DOM of it.
@@ -845,6 +882,8 @@ load/update data dynamically.
 \end{frame}
 
 \begin{frame}[fragile]
+\begin{itemize}
+\item
 \begin{lstlisting}
 function getFlights(depcity) {
     var req = new XMLHttpRequest()
@@ -857,7 +896,7 @@ function getFlights(depcity) {
         return undefined
 }
 \end{lstlisting}
-Server can return an XML DOM value of direct flights from city:
+\item Server can return an XML DOM value of direct flights from city:
 \begin{lstlisting}[language=XML]
 <xml>
 <flights><flight no="LH1231" dep="ESB" dest="MUN">Munih</flight>
@@ -866,7 +905,9 @@ Server can return an XML DOM value of direct flights from city:
 </flights>
 </xml>
 \end{lstlisting}
-This DOM can be processed similar to HTML DOM.
+\item This DOM can be processed similar to HTML DOM.
+\item Alternatively \structure{XPath} can be used \lstinline!doc.evaluate('//flight[@no="LH1231"]', doc)!
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -951,13 +992,31 @@ Content-type: application/json
 \end{itemize}
 \end{frame}
 
+\subsection*{fetch API}
+\begin{frame}[fragile]
+\frametitle{fetch}
+\begin{itemize}
+\item Promise based \lstinline!fetch! API is more convenient than callbacks. Supported after 2015.
+\item \lstinline!fetch(url, options)!
+\begin{lstlisting}
+async function getFlights(depcity, updatefunc) {
+	var resp = await fetch('/getflights/'+depcity, 
+			{ method: 'POST', body: 'id=all&nres=10'})
+	if (resp.ok) {
+            updatefunc(resp.responseXML)    
+	} else { alert('request failed:' + resp.status)		 } 
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
 \section{JQuery}
 \begin{frame}
 \frametitle{JQuery}
 \begin{itemize}
 \item A Javascript library for easier Javascript development
 \begin{itemize}
-\item Shorter and easy to use element selectors \lstinline!$(".id")!
+\item Shorter and easy to use \structure{CSS selectors} \lstinline!$(".id")!
 \item Browser version abstraction. Same code support multiple browsers
 \item Animations with stylesheet
 \item Easy document manipulation and AJAX
@@ -967,8 +1026,10 @@ Content-type: application/json
 \item You need to download a version from \url{http://jquery.com} and
 	include in web page for example inside of \lstinline!<head></head>!:\\
 	\lstinline!<script src="/jquery/jquery.min.js"></script>"!
-\item or Google hosted one:\\
-	\lstinline!<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">!
+\item or hosted by content providers:\\
+	\lstinline[basicstyle=\tiny\ttfamily]!<script src="https://code.jquery.com/jquery-3.6.0.min.js>!
+	\lstinline[basicstyle=\tiny\ttfamily]!<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">!
+	\lstinline[basicstyle=\tiny\ttfamily]!<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js">!
 \end{itemize}
 \end{frame}
 

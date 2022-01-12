@@ -80,17 +80,17 @@ class Notifications:
 			del self.observers[cid]
 		print(self.observers)
 
-	def addNotification(self, oid, message):
+	async def addNotification(self, oid, message):
 		'''add a notification for websocket conns with id == oid
 			the '*' oid is broadcast. Message is the dictionary
 			to be sent to connected websockets.
 		'''
 		if oid == '*':     # broadcast message
 			for c in self.broadcast:
-				yield from c.send(json.dumps(message))
+				await c.send(json.dumps(message))
 		elif oid in self.observers:
 			for c in self.observers[oid]:
-				yield from c.send(json.dumps(message))
+				await c.send(json.dumps(message))
 
 
 class GetNotifications:
@@ -99,19 +99,18 @@ class GetNotifications:
 		self.transport = transport
 		print("Starting UDP server")
 
-	def datagram_received(self, data, addr):
+	async def datagram_received(self, data, addr):
 		try:
 			mess = json.loads(data.decode())
 		except:
 			print('Cannot parse {}\n'.format(data.decode()))
 			self.transport.sendto(b'cannot parse', addr)
 			return
-		Notfications().addNotification(mess['id'], mess)
+		await Notfications().addNotification(mess['id'], mess)
 		print('Received %r from %s' % (mess, addr))
 
 		
-@asyncio.coroutine 
-def websockethandler(websocket, path):
+async def websockethandler(websocket, path):
 	
 	# websocket.request_headers is a dictionary like object
 	print (websocket.request_headers.items())
@@ -120,7 +119,7 @@ def websockethandler(websocket, path):
 		print(http.cookies.SimpleCookie(websocket.request_headers['Cookie']))
 
 	# get the list of ids to follow from browser
-	reqlist = yield from websocket.recv()
+	reqlist = await websocket.recv()
 	idlist = json.loads(reqlist)
 	
 	print('connected', idlist)
@@ -134,10 +133,10 @@ def websockethandler(websocket, path):
 
 	try:
 		while True:
-			data = yield from websocket.recv()
+			data = await websocket.recv()
 			try:
 				message = json.loads(data)
-				yield from Notifications().addNotification(message['id'], message) 
+				await Notifications().addNotification(message['id'], message) 
 			except Exception as e:
 				print("invalid message. {} : exception: {}".format(data, str(e)))
 	except Exception as e:
@@ -158,7 +157,7 @@ try:
 	ws_addr = getaddrinfo(ws_addr[0], ws_addr[1], AF_INET, SOCK_STREAM)
 	ws_addr = ws_addr[0][4]
 except Exception as e:
-	sys.stderr.write("{}\nusage: {} udpip:port wsip:port\n".format(e, sys.argv[0]))
+	sys.stderr.write("{}\nusage: {} wsip:port\n".format(e, sys.argv[0]))
 	sys.exit()
 
 
