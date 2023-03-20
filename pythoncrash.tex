@@ -46,7 +46,11 @@
 
 
  \frame{\maketitle}
- \frame{\tableofcontents}
+\begin{frame}
+\begin{multicols}{2}
+\tableofcontents
+\end{multicols}
+\end{frame}
 
 \section{Python Syntax}
 \begin{frame}
@@ -75,7 +79,7 @@
 \item Literals
 	\begin{itemize}
 		\item \lstinline!123! , \lstinline!231.23e-12! ,  \lstinline!2.3+3.534j!  , \lstinline!True!   , \lstinline!'hello'!  , \lstinline!"world"!  , \lstinline!b'ho\\xc5\\x9fgeldin'!
-		\item \lstinline!1231412412312L! (long), \lstinline!0o432! (octal), \lstinline!0x43fe! (hex),
+		\item \lstinline!0o432! (octal), \lstinline!0x43fe! (hex),
 			\lstinline!0b0100110101! (binary)
 		\item Composite: \lstinline!('ali',123)! \lstinline!['134',2,5]! \lstinline!\{'ali':4, 'veli':5\}! \lstinline!lambda x:x*x!
 	\end{itemize}
@@ -99,7 +103,7 @@
 \begin{lstlisting}
 +       -       *       **      /       //      %
 <<      >>      &       |       ^       ~
-<       >       <=      >=      ==      !=      <>    is
+<       >       <=      >=      ==      !=       is
 []      .       @
 =       +=      -=      *=      /=      //=     %=
 &=      |=      ^=      >>=     <<=     **=
@@ -163,9 +167,8 @@ else:
 \begin{itemize}
 \item Loop body executed as long as condition is true
  \item \lstinline!else! part is optional
-\item \lstinline!else! part is
- executed when condition fails and loop is terminated.
-\item When loop terminates without testing condition, by a \lstinline!break!,
+\item \lstinline!else! part is executed after loop terminates even if loop body is not executed at all.
+\item When loop terminates without a condition test, i.e. by a \lstinline!break!,
 	\lstinline!else! part is not executed.
 \end{itemize}
 \end{frame}
@@ -188,8 +191,8 @@ else:
 \item Iterable expression evaluated once. Then for each \lstinline!next()! value
      body of the loop is executed. The variable is assigned to value from next.
 \item When all elements iterated, \lstinline!else! part is
- executed and loop terminated
- \item \lstinline!else! part is optional. Executed loop terminates without \lstinline!break! or exception.
+ executed and loop terminates
+ \item \lstinline!else! part is optional. Executed when loop terminates without \lstinline!break! or exception.
  \item lists, tuples, strings, dictionaries,... are iteratable objects
 \end{itemize}
 \end{frame}
@@ -288,13 +291,48 @@ print(classname.cx)	# class members can be accessed as well
 \codeclass
 \end{beamercolorbox}
 \end{frame}
+\section{Class Members}
+\begin{frame}[fragile]
+\frametitle{Class Members}
+\begin{beamercolorbox}{pexample}
+\begin{lstlisting}
+class T:
+    x      # class member
+    def __init__(self):
+      self.v = x   #!!!! Invalid
+      self.v = self.x   # Valid as r-value, readonly access
+      self.x = self.x + 1  # LHS instance member, LHS instance
+      T.x += 1       # correct usage
+
+a=T()
+print(a.x)    # r-value, OK
+a.x = 10      # l-value, creates an instance member
+T.x = 10      # class member
+\end{lstlisting}
+\end{beamercolorbox}
+\begin{itemize}
+\item Class members work in class scope, not in object.
+\item Instances can access them as r-value, not l-value.
+\item Scope should be given explicitly, otherwise considered local variable.
+\item \lstinline!classname.membername! is the correct way for l-value access.
+\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+\begin{itemize}
+\item No private/public/protected in Python. All values are accessible.
+\item Leading \lstinline!_! avoids importing from a module as \lstinline!from module import *!. Some frameworks libraries hide them with internal mechanisms.
+\item Leading \lstinline!__! mangles name of method  as \lstinline!_ClassName__method! 
+	when called outside. Other methods can call it with original name (with leading underscores). It is also used to avoid overriding due to inheritence.
+\item \lstinline!@classmethod! decorator can be used to create methods getting class methods getting class as the parameter
+\item \lstinline!@staticmethod! decorator can be used to create methods in class scope without any object/class parameter constraints.
+\end{itemize}
+\end{frame}
 \begin{frame}
 \begin{itemize}
 \item \lstinline!self! is always the first parameter of the class method, it is
      passed as the firs parameter
 \item \lstinline!__init__! is the constructor name
 \item \lstinline!__str__! can be implemented to get string representing the object
-\item \lstinline!__unicode__! can be implemented to get unicode string representing the object
 \item \lstinline!__repr__! can be implemented to change how interpreter displays the object. 
 	\lstinline!str()! calls \lstinline!repr()! when not implemented
 \item \lstinline!__new__! is the class constructor (called before init)
@@ -343,32 +381,6 @@ print(classname.cx)	# class members can be accessed as well
 \end{itemize}
 \end{frame}
 
-\section{Class Members}
-\begin{frame}[fragile]
-\frametitle{Class Members}
-\begin{beamercolorbox}{pexample}
-\begin{lstlisting}
-class T:
-    x      # class member
-    def __init__(self):
-      self.v = x   #!!!! Invalid
-      self.v = self.x   # Valid as r-value, readonly access
-      self.x = self.x + 1  # LHS instance member, LHS instance
-      T.x += 1       # correct usage
-
-a=T()
-print(a.x)    # r-value, OK
-a.x = 10      # l-value, creates an instance member
-T.x = 10      # class member
-\end{lstlisting}
-\end{beamercolorbox}
-\begin{itemize}
-\item Class members work in class scope, not in object.
-\item Instances can access them as r-value, not l-value.
-\item Scope should be given explicitly, otherwise considered local variable.
-\item \lstinline!classname.membername! is the correct way for l-value access.
-\end{itemize}
-\end{frame}
 
 \section{Assignment Semantics}
 \begin{frame}
@@ -398,26 +410,22 @@ T.x = 10      # class member
 \end{itemize}
 \end{frame}
 
-\defverbatim[colored]\codeiterator{
+\begin{frame}[fragile]
+\begin{beamercolorbox}{pexample}
 \begin{lstlisting}[escapeinside=\{\}]
 for i in a:
    # loop body
 
 {\rm\em is equivalent to:\/}
 
-it=iter(a)
+it = iter(a)
 try:
-   i=it.next()
    while True:
-   	# loop body
-        i=it.next()
+        i=next(it)
+        # loop body
 except StopIteration:
    pass
-\end{lstlisting}}
-\begin{frame}
-\begin{beamercolorbox}{pexample}
-\codeiterator
-\end{beamercolorbox}
+\end{lstlisting}\end{beamercolorbox}
 \end{frame}
 
 \defverbatim[colored]\codefibiter{
@@ -430,7 +438,7 @@ class Fibonacci:
 	self.n = n
    def __iter__(self):
 	return self
-   def next(self):
+   def __next__(self):
 	self.count += 1
 	if self.count >= self.n:
 		raise StopIteration
@@ -459,7 +467,8 @@ class Fibonacci:
 \end{itemize}
 \end{frame}
 
-\defverbatim[colored]\codefibgen{
+\begin{frame}[fragile]
+\begin{beamercolorbox}{pexample}
 \begin{lstlisting}[escapeinside=\{\}]
 def fibonacci(n):
 	a = 0
@@ -469,92 +478,82 @@ def fibonacci(n):
 		yield  b
 		a,b = b,a+b
 		count += 1
-\end{lstlisting}}
-\begin{frame}
-\begin{beamercolorbox}{pexample}
-\codefibgen
-
-Python creates all required intermediate objects and methods.
-\end{beamercolorbox}
+\end{lstlisting}\end{beamercolorbox}
+Python creates all required intermediate objects and methods and return
+a \lstinline!generator! object.
 \end{frame}
 
-\defverbatim[colored]\codebst{
+\begin{frame}[fragile]
+\frametitle{A Tree Example}
+\begin{beamercolorbox}{pexample}
 \begin{lstlisting}[basicstyle=\tiny\ttfamily,escapeinside=\{\}]
 class BSTree:
 	''' A binary search tree example'''
 	def __init__(self):
 		self.node = None
-	def set(self, key, val):
+	def __setitem__(self, key, val):
 		if self.node == None:	# empty tree
 			self.node = (key, val)	# node content is a tuple
 			self.left, self.right = BSTree(), BSTree()
 		elif key < self.node[0]:	# not empty test key
-			self.left.set(key, val)		# insert on left subtree
+			self.left[key] = val	# insert on left subtree
 		elif key > self.node[0]:	
-			self.right.set(key, val)	# insert on right subtree
-		else:
-			self.node = (key, val)		# update
-	def get(self, key):
+			self.right[key] = val	# insert on right subtree
+		else: self.node = (key, val)	# update
+	def __getitem__(self, key):
 		if self.node == None:	# empty tree
 			raise KeyError	# list, tuple also raise this
 		elif key < self.node[0]:
-			self.left.get(key)
+			return self.left[key]
 		elif key < self.node[0]:
-			self.right.get(key)
-		else:
-			return self.node[1]	# found, return value
-        def __str__(self):
-                if self.node == None:   return "*"
-                else:   return "[" + str(self.left) + str(self.node) +\
-                                 str(self.right) + "]"
+			return self.right[key]
+		else: return self.node[1]	# found, return the value
+    def __str__(self):
+        if self.node == None:   return "*"
+        else:  return "[" + str(self.left)+str(self.node)+str(self.right) + "]"
 
 a = BSTree()
 for i in [6,2,8,3,9,1]:
-	a.set(i, i*i)
+	a[i] = i*i
 print(a)
-\end{lstlisting}}
-\begin{frame}
-\frametitle{A Tree Example}
-\begin{beamercolorbox}{pexample}
-\codebst
+\end{lstlisting}
 \end{beamercolorbox}
 \end{frame}
 
-\defverbatim[colored]\codebstiter{
+\begin{frame}[fragile]
+\frametitle{An  iterator on Tree Example}
+\begin{beamercolorbox}{pexample}
 \begin{lstlisting}[basicstyle=\tiny\ttfamily,escapeinside=\{\}]
 # ... added to BST
-        def _nextof(self, key):		# return min value >key 
-                if self.node == None: 	return None
-                elif key == None or key < self.node[0]:
-                        v = self.left._nextof(key)
-			return self.node if v == None else v
-                else:
-                        return self.right._nextof(key)
+    def _nextof(self, key):     # return min value >key
+        if self.node == None:    return None
+        elif key == None or key < self.node[0]:
+            v = self.left._nextof(key)
+            return self.node if v == None else v
+        else:
+            return self.right._nextof(key)
 
-        def __iter__(self):
-                return BSTree.BSTreeIter(self)	# new instance of nested class
+    def __iter__(self):
+            return BSTree.BSTreeIter(self)  # new instance of nested class
 
-        class BSTreeIter:
-                def __init__(self, tree):
-                        self.tree = tree
-                        self.state = None
-                def next(self):
-                        nextnode = self.tree._nextof(self.state)
-                        if nextnode == None:
-                                raise StopIteration
-			else:
-				self.state = nextnode[0]
-				return nextnode
+    class BSTreeIter:
+        def __init__(self, tree):
+            self.tree = tree
+            self.state = None
+        def __next__(self):
+            nextnode = self.tree._nextof(self.state)
+            if nextnode == None:
+                raise StopIteration
+            else:
+                self.state = nextnode[0]
+                return nextnode
+
 # main
 a = BSTree()
 #...  insert values etc.
 for (k,v) in a:
-	print(k,v)
-\end{lstlisting}}
-\begin{frame}
-\frametitle{An  iterator on Tree Example}
-\begin{beamercolorbox}{pexample}
-\codebstiter
+    print(k,v)
+\end{lstlisting}
 \end{beamercolorbox}
 \end{frame}
 
@@ -607,5 +606,148 @@ strings to a concatanated string, seperated by the string object
 	returns -1 instead of exception.
 \end{itemize}
 \end{frame}
-\end{document}
 
+
+\section{Decorators}
+\begin{frame}[fragile]
+\frametitle{Decorators}
+\begin{itemize}
+\item Python decorators are evaluated during function/class definition
+    and maps function/class definition into a new one
+\item Decorators are functions returning a callable that replaces
+    qactual function or class constructor.
+\begin{lstlisting}[escapeinside=\{\}]
+def dec(callable):
+    def f():
+      ..... use callable here
+    return f
+
+# ---
+@dec
+class cls(): {class defn here}
+# equivalent to
+class cls(): {class defn here}
+  ...
+cls = dec( cls )
+# ---
+
+obj = cls()     # actually calls f() inside dec()
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Decorators are used to alter functionalities of classes and functions for routine tasks.
+\item A simple trace decorator:
+\begin{lstlisting}
+def trace(f,*p, **kw):
+	def func(*p, **kw):
+		print('entered', p, kw)
+		r = f(*p, **kw)
+		print('exitted', p, kw, r)
+		return r
+	return func
+
+@trace
+def f(x):
+	return x+1
+
+@trace
+def g(a,b):
+	if a < b: (a,b) = (b,a)
+	return a if b == 0 else g(b, a % b)
+
+print(f(3))
+print(g(210,63))
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Example: an instance counting decorator:
+\begin{lstlisting}
+icount = {}
+def counted(cls,*p,**kw):
+    def func(*p, **kw):
+        icount[cls] = icount[cls]+1 if cls in icount  else 1
+        return cls(*p, **kw)
+    return func
+
+@counted
+class A:
+    def __init__(self,a):
+        self.v = a
+        
+a = A(3)
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Builtin Decorators}
+\scriptsize
+There are couple of useful decorators:
+\begin{itemize}
+\item \lstinline{@classmethod} makes a method expect a class argument as first argument. Method works in class scope instead of instance scope
+\item \lstinline{@staticmethod} makes a method independent from object. It works as a normal function without object argument. It becomes a function in the class scope. Useful for auxiliary functions inside class definition.
+\begin{lstlisting}[basicstyle=\tiny\tt]
+class R:
+    sumx, sumy = 0, 0		# class members: R.sumx,...
+    def __init__(self, x,y):
+        t = self._f(x,y)		# calls the staticmethod
+        self.a, self.b = x/t, y/t
+        R.sumx, R.sumy = R.sumx+x, R.sumy+y
+    @classmethod
+    def sums(cls):		# First argument is the class, not instance
+        return cls.sumx, cls.sumy
+    @staticmethod
+    def _f(a,b):		# No extra argument 
+        if a < b: a,b = b,a
+        return a if b == 0 else R._f(b, a % b)  # recursive call
+
+a = R(4,6)
+print(R.sums(), a.sums())
+print(a._f(72,48), R._f(72.48))
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\small
+\begin{itemize}
+\item \lstinline!@property! decorator. Defines a member value that is calculated with a function.
+\begin{lstlisting}[basicstyle=\tiny\tt]
+class P:
+    def __init__(self, name, surname):
+        self.name, self.sname = name, surname
+    @property
+    def fullname(self):
+        return ' '.join( (self.name , self.sname))
+
+p = P('Bugs', 'Bunny')
+print(p.fullname)
+\end{lstlisting}
+\item Also setter and deleter functions can be defined for setting the member and deleting it:
+\begin{lstlisting}[basicstyle=\tiny\tt]
+    #... continued ...
+    @fullname.setter
+    def fullname(self, value):   # gets the RHS as argument
+        self.name, self.sname = value.split(' ')
+	@fullname.deleter
+	def fullname(self):			# removes the value
+		self.name, self.sname = '', ''
+
+p.fullname = 'Duffy Duck'
+print(p.fullname)
+del p.fullname
+print(p.fullname)
+\item Functional control over members can be implemented. (Invalid value assigment, precomputations etc.)
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+
+\end{document}
