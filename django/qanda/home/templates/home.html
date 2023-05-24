@@ -16,7 +16,8 @@ Ask new question:
 {% for question in questions %}
 <li> <a href="/view/{{question.id}}">{{ question.qtitle }}</a> <b>{{ question.reply_set.count }}</b> replies
 	<br/>
-	 {% for tag in question.tag.all %}
+	 {{question.user.username}} ({{question.user.first_name}} {{question.user.last_name}})
+	 <b>Tags:</b> {% for tag in question.tag.all %}
 	<span>{{tag.text}}</span>
 	{% endfor %}
 </li>

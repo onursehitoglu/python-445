@@ -15,7 +15,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url,include
+from django.urls import  path, include
 from django.contrib import admin
 
 import movie.views
@@ -24,33 +24,33 @@ import movie.views
 # used to map patterns
 urlpatterns = [
 #       HOME page
-    url(r'^$', movie.views.home, name='Movie Party Application'),
+    path('', movie.views.home, name='Movie Party Application'),
 #       ADD movie page
-    url(r'^add$', movie.views.add, name='Add new movie'),
+    path('add', movie.views.add, name='Add new movie'),
 #       ADD movie action
-    url(r'^addmovie$', movie.views.addmovie, name='Add new movie'),
+    path('addmovie', movie.views.addmovie, name='Add new movie'),
 #       UPDATE movie page
-    url(r'^update/([0-9]+)$', movie.views.update, name='Update movie'),
+    path('update/<int:updid>', movie.views.update, name='Update movie'),
 #       UPDATE movie action
-    url(r'^updatemovie$', movie.views.updatemovie, name='Update movie'),
+    path('updatemovie', movie.views.updatemovie, name='Update movie'),
 #       CHANGE watch status of movie
-    url(r'^watch/([0-9]+)$', movie.views.watch, name='Change watch'),
+    path('watch/<int:watchid>', movie.views.watch, name='Change watch'),
 #       VOTE/movieid/1-5
-    url(r'^vote/([0-9]+)/([1-5])$', movie.views.vote, name='Vote movie'),
+    path('vote/<int:voteid>/<int:voterate>', movie.views.vote, name='Vote movie'),
 #       DELETE movie
-    url(r'^delete/([0-9]+)$', movie.views.delete, name='Add new movie'),
+    path('delete/<int:delid>', movie.views.delete, name='Add new movie'),
 #       LOGOUT
-    url(r'^logout$', movie.views.logout_view, name='Logout'),
+    path('logout', movie.views.logout_view, name='Logout'),
 #       LOGIN post
-    url(r'^loginp$', movie.views.login_post, name='Login'),
+    path('loginp', movie.views.login_post, name='Login'),
 #       LOGIN page
-    url(r'^login$', movie.views.login_view, name='Login'),
+    path('login', movie.views.login_view, name='Login'),
 #       uncomment if python-django-registration is installed
-#    url(r'^accounts/', include('registration.backends.default.urls')),
+#    path(r'^accounts/', include('registration.backends.default.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
-#    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+#    path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]

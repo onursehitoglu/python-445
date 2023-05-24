@@ -12,7 +12,7 @@ def application(environ, start_response):
 
 	body = '''<html><body>
 		  <h1> Hello </h1>
-		  {}
+		  <p><strong>{}</strong></p>
 		  <form action="/" method="post">
 			Name <input type="text" name="name"/>
 			Surname <input type="text" name="sname"/>
@@ -36,7 +36,7 @@ def application(environ, start_response):
 	# query is a dictionary of form data
 
 	try:
-		response_body = body.format(query['name'][0] + ', ' + query['sname'][0])
+		response_body = body.format(query[b'name'][0].decode() + ', ' + query[b'sname'][0].decode())
 	except:
 		response_body = body.format('')
 

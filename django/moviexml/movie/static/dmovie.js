@@ -131,6 +131,7 @@ function loginpost(callback)
 				// success, run callback
 				callback();
 				setuser(form.username.value);
+				initializepage();
 			}
 		} else if (http.readyState == 4) {
 			// just to see output, debugging purpose
@@ -166,8 +167,8 @@ function loadmovielist()
 			if ( err == "auth")  {
 				authenticate(function() {
 					loadvotes();
-					loadmovielist();
 					loadwatchlist();
+					loadmovielist();
 				});
 				return;
 			} else if (err == "err") {
@@ -190,9 +191,9 @@ function loadmovielist()
 				movie = getfields(m);
 				movielist[movie.id] = movie;
 			}
+			// now update the movie list table from the model
+			updatemovielistview();
 		}
-		// now update the movie list table from the model
-		updatemovielistview();
 	};
 	http.send(null);
 }
@@ -673,6 +674,8 @@ function loadwatchlist()
 }
 
 
-loadwatchlist();
-loadvotes();
-loadmovielist();
+function initializepage() {
+	loadwatchlist();
+	loadvotes();
+	loadmovielist();
+}

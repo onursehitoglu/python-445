@@ -103,8 +103,8 @@ function loadmovielist()
 			if (data.reason == 'Authentication') {
 				authenticate(function() {
 						loadvotes();
-						loadmovielist();
 						loadwatchlist();
+						loadmovielist();
 					});
 			} else {
 				alert(data.reason);
@@ -231,11 +231,13 @@ function loadvotes()
 			if (data.result != "Success") {
 				return;
 			}
-
+			votes = {}
 			for (var i in data.votes) {
 				var v = data.votes[i];
 				votes[v.movieid] = v.vote;
+				$(`#row${v.movieid}`).find('.votecol span').attr('class','star') ;   $(`#row${v.movieid}`).find(`.votecol span:nth-child(${v.vote})`).attr('class','staron') 
 			}
+
 	}) ;
 }
 
