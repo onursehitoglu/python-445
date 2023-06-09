@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{multicol}
+\usepackage{algpseudocode}
 
 \mode<article>
 {
@@ -1172,6 +1173,146 @@ getFligths('ankara',updflight)
 \item All server responses converted into XML or more practically JSON
 \item Javascript get responses and update web page.
 \item More dynamism achieved in HTML5 through \structure{web sockets}.
+\end{itemize}
+\end{frame}
+
+\section{Cross-Origin Resource Sharing}
+\begin{frame}[fragile]
+\frametitle{Cross-Origin Resource Sharing (CORS)}
+\begin{itemize}
+\item Web applications may need to connect to web services in other domains.
+\item Browsers default information flow allow HTML based links, embedded images and form posts
+	direct to cross-origin (other than the current domain of HTML page) requests.
+\item \structure{CSRF} protects POST requests from other domains.
+\item When there is a an AJAX request with custom headers or non standard (different content type)
+	POST request, \structure{same origin} policy forbids making a request to another domain.
+\item Browser declare their origin web domain with \lstinline!Origin! header and 
+	web services can pick which domains to serve on \lstinline!Access-Control-Allow-Origin! header.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item
+	Browser side decision can be written as:
+{\scriptsize
+\begin{algorithmic}
+\State $method \gets$ HTTP method
+\State $targetorigin \gets$ main part of target URL
+\State $origin \gets$ main part of the URL of the running script
+\State $headers \gets$ request headers
+\If{origdomain=domain}
+	\State \structure{Do actual request}
+\ElsIf{$headers \not\subset$ standardheaders $or$\\ \hspace*{3em} ( $method=$POST $and$ contenttype is not standard)}
+	\State make a GET or OPTIONS request to URL
+	\State send \texttt{Origin: $origin$} header
+	\If {Response is success with a matching \texttt{Access-Control-Allow-Origin} header}
+		\State \structure{Do actual request}
+	\Else
+		\State \textcolor{red!70!black}{return Error}
+	\EndIf
+\EndIf
+\end{algorithmic}
+}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Web services expecting non standard requests (JSON,XML, etc)  from other domains should
+implement \lstinline!OPTIONS! method and send appropriate headers.
+\item Server sends either \texttt{\small Access-Control-Allow-Origin: *} or\\
+	\texttt{\small Access-Control-Allow-Origin: {\em OriginHeaderinRequest\/}}
+\item This negotiation defines the authorization for the actual request.
+		 Server can also restrict:
+	\begin{itemize}
+		\item Valid HTTP methods \texttt{\small Access-Control-Allow-Methods}
+		\item Valid HTTP headers \texttt{\small Access-Control-Allow-Headers}
+		\item Number of seconds the reply can be cached so that the headers will be valid
+		\texttt{\small Access-Control-Max-Age}
+		\item If cookies and credentials should be sent with request
+			\texttt{\small Access-Control-Allow-Credentials}
+	\end{itemize}
+\item  \texttt{\small Access-Control-Allow-Origin: *} matches all origins.
+\end{itemize}
+\end{frame}
+
+\section{WebSockets}
+\begin{frame}[fragile]
+\frametitle{Server Push}
+\begin{itemize}
+\item One way to access newly available data on server is polling server continously.
+\item Polling interval determines how fresh data is. Small intervals end up in server load
+	long intervals reduce responsiveness.
+\item Generally one of 3 methods are used to solve this problem
+\begin{itemize}
+	\item \structure{Long polling} Server does not respond immediately and keep connection open until
+		data is available. Client repeatedly polls on connection break and/or new data.
+	\item \structure{Server Sent Events} \lstinline!EventSource(URL)! request on client is responded
+		by server with \texttt{\small Content-Type: text/event-stream}. Connection is kept open and each time server
+	writes on connection, client gets a message event.
+	\item \structure{WebSocket} A bidirectional tunnel between server and client.
+\end{itemize}
+\item First two works on HTTP protocol. Websockets use HTTP to establish the connection, than switches to a special protocol.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Websockets}
+\begin{itemize}
+\item Client sends:\\
+	 \texttt{Upgrade: websocket} and \texttt{Connection: Upgrade} headers
+	to HTTP server to establish a websocket connection.
+\item Server responds:\\
+	 \texttt{HTTP/1.1 101 Switching Protocols}\\
+	and repeats the two headers above in the respond.
+\item After this handshake, communication switches to a \structure{full duplex}, \structure{binary}
+	 frame based protocol. Each frame
+starts with the payload length in two or more bytes, followed by the payload. A message can be sent in a single frame or sent in multiple frames.
+\item Websockets are not subject to \structure{same origin policy} so server check \texttt{Origin} header and authorize it  when establishing the connection.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item Browser side works on a \lstinline!WebSocket! object and it is event based:
+\begin{lstlisting}
+const socket = new WebSocket('ws://example.com/ws');
+
+socket.onopen = function () {....}
+socket.onmessage = function (event) { var message =  event.data ; ...}
+socket.onclose = function (event) {....}
+socket.onerror = function (event) {....}
+\end{lstlisting}
+\item Browser script can call \lstinline!socket.send("....")! to send a message to established
+	socket.
+\item URL protocol \texttt{'ws://'} is used for websocket connections. Secure version is
+	 \texttt{'wss://'}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Websocket Authentication}
+\begin{itemize}
+\item Websocket protocol does not have headers. The last time server gets an HTTP header is
+	during the connection establishment (\texttt{Upgrade: websocket} header). The connection
+	can be rejected based on session or CSRF cookies.
+\item Other means of authencitation should be handled in custom messages in websockets.
+	i.e. Send authentication required as JSON message, client sends credentials in a JSON message etc.
+\item Similarly session token can be sent in each client message to get a stronger security.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Server Side}
+\begin{itemize}
+\item Websocket is not HTTP so application firewalls and proxies can block websocket connections if not configured otherwise.
+\item For Python there are couple of alternatives:
+\begin{itemize}
+	\item \texttt{websockets} library. A Python library implementing websockets.
+	\item \texttt{Tornado}. A web application framework that serves websocket connections and works as a WSGI compatible server.
+	\item \texttt{Django Channels}. Some extensions and extra servers to add websocket support in Django.
+\end{itemize}
 \end{itemize}
 \end{frame}
 \end{document}
