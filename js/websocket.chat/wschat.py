@@ -93,22 +93,6 @@ class Notifications:
 				await c.send(json.dumps(message))
 
 
-class GetNotifications:
-	''' Class for getting notifications as udp packets'''
-	def connection_made(self, transport):
-		self.transport = transport
-		print("Starting UDP server")
-
-	async def datagram_received(self, data, addr):
-		try:
-			mess = json.loads(data.decode())
-		except:
-			print('Cannot parse {}\n'.format(data.decode()))
-			self.transport.sendto(b'cannot parse', addr)
-			return
-		await Notfications().addNotification(mess['id'], mess)
-		print('Received %r from %s' % (mess, addr))
-
 		
 async def websockethandler(websocket, path):
 	
@@ -167,9 +151,6 @@ except Exception as e:
 
 
 
-## Following creates a UDP handler
-#udplistener = loop.create_datagram_endpoint(
-#    	GetNotifications, local_addr=udp_addr )
 # following creates a websocket handler
 loop = asyncio.get_event_loop()
 loop.set_debug(True)

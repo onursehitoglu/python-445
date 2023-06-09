@@ -69,14 +69,13 @@
 			}	
 		}
 
-
-		function wseventhandler (event) 
 		class Ws  {
-		function constructor(wids = []) {
+		constructor(wids = []) {
 			this.waitids = wids;
 			var status = document.getElementById('status');
 			// create a web socket
         		this.socket = new WebSocket('ws://' + serveripport);
+			var socket = this.socket
 			socket.onopen = function() {
 				// send id list for notifications
 				socket.send(JSON.stringify(wids));
@@ -106,11 +105,12 @@
 				};
 			}
 		}
-		function addnewid(nid) {
+		addnewid(nid) {
 			this.socket.send(JSON.stringify({command:'add',id: nid}))
 		}
-		function removeid(did) {
+		removeid(did) {
 			this.socket.send(JSON.stringify({command:'delete',id: did}))
+		}
 		}
 		var ws = new Ws();
         </script>
