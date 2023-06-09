@@ -136,7 +136,12 @@ async def websockethandler(websocket, path):
 			data = await websocket.recv()
 			try:
 				message = json.loads(data)
-				await Notifications().addNotification(message['id'], message) 
+				if "command" in message and message['command'] == 'add':
+					Notifications().register(websocket, message['id'])
+				elif "command" in message and message['command'] == 'delete': 
+					Notifications().unregister(websocket, message['id'])
+				else:
+					await Notifications().addNotification(message['id'], message) 
 			except Exception as e:
 				print("invalid message. {} : exception: {}".format(data, str(e)))
 	except Exception as e:

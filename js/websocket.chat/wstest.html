@@ -43,8 +43,8 @@
 				return false;
 
 			ws.waitids.push(newid);
+			ws.addnewid(newid);
 			// restart websocket with new information
-			ws.createwebsocket();
 			newel.value = "";
 
 			// update DOM with new subscription
@@ -65,37 +65,18 @@
 			if (pos >= 0) {
 				ws.waitids.splice(pos,1);
 				// restart websocket with new information
-				ws.createwebsocket();
+				ws.removeid(did);
 			}	
 		}
 
 
-		function wseventhandler (event) {
-			var messages = JSON.parse(event.data);
-			console.log(messages)
-			if (!Array.isArray(messages)) {
-				messages = [messages];
-			}
-			for ( var mid in messages) {
-            	var messlist = document.getElementById('messagelist'),
-            		messitem = document.createElement('li');
-				messitem.innerHTML = '<strong>'+messages[mid].id+'</strong> '+ messages[mid].message;
-            	messlist.appendChild(messitem);
-			};
-		}
-		function Ws (ip) {
-			this.socket = undefined;
-			this.waitids = [];
-		}
-		Ws.prototype.createwebsocket = function () {
+		function wseventhandler (event) 
+		class Ws  {
+		function constructor(wids = []) {
+			this.waitids = wids;
 			var status = document.getElementById('status');
-			if (this.socket)	// if already connected close it and reopen
-				this.socket.close();
-			if (this.waitids.length < 1)	// no subsciption
-				return;	
 			// create a web socket
-        	var socket = new WebSocket('ws://' + serveripport);
-			var wids = this.waitids;
+        		this.socket = new WebSocket('ws://' + serveripport);
 			socket.onopen = function() {
 				// send id list for notifications
 				socket.send(JSON.stringify(wids));
@@ -111,8 +92,25 @@
 				status.setAttribute('style','background-color: #ffa0a0');
 			}
 
-        	socket.onmessage = wseventhandler;
-			this.socket = socket;
+			socket.onmessage = function (event)  {
+				var messages = JSON.parse(event.data);
+				console.log(messages)
+				if (!Array.isArray(messages)) {
+					messages = [messages];
+				}
+				for ( var mid in messages) {
+            				var messlist = document.getElementById('messagelist'),
+            				messitem = document.createElement('li');
+					messitem.innerHTML = '<strong>'+messages[mid].id+'</strong> '+ messages[mid].message;
+            				messlist.appendChild(messitem);
+				};
+			}
+		}
+		function addnewid(nid) {
+			this.socket.send(JSON.stringify({command:'add',id: nid}))
+		}
+		function removeid(did) {
+			this.socket.send(JSON.stringify({command:'delete',id: did}))
 		}
 		var ws = new Ws();
         </script>
