@@ -61,30 +61,35 @@ class Notifications:
 		self.broadcast = set()
 		self.messages = {}
 
+	def newconnection(self, ws):
+		self.broadcast.add(ws)
+
+	def closeconnection(self, ws):
+		self.broadcast.discard(ws)
+
 	def register(self, ws, cid):
 		'''register a Lock and an id string'''
 		if cid in self.observers:
 			self.observers[cid].add(ws)
 		else:
 			self.observers[cid] = set([ws])
-		self.broadcast.add(ws)
-		print(self.observers)
+		print('Current observers',self.observers,self.broadcast)
 
 	def unregister(self, ws, cid):
 		'''remove registration'''
 		if cid not in self.observers:
 			return
 		self.observers[cid].discard(ws)
-		self.broadcast.discard(ws)
 		if self.observers[cid] == set():
 			del self.observers[cid]
-		print(self.observers)
+		print('Current observers',self.observers,self.broadcast)
 
 	async def addNotification(self, oid, message):
 		'''add a notification for websocket conns with id == oid
 			the '*' oid is broadcast. Message is the dictionary
 			to be sent to connected websockets.
 		'''
+		print(oid, message)
 		if oid == '*':     # broadcast message
 			for c in self.broadcast:
 				await c.send(json.dumps(message))
@@ -108,12 +113,12 @@ async def websockethandler(websocket, path):
 	
 	print('connected', idlist)
 
+	Notifications().newconnection(websocket)
 	if type(idlist) != list:
 		idlist = [idlist]
 	for myid in idlist:
 		Notifications().register(websocket, myid)
-
-	print(Notifications().observers)
+	idlist = set(idlist)
 
 	try:
 		while True:
@@ -122,8 +127,10 @@ async def websockethandler(websocket, path):
 				message = json.loads(data)
 				if "command" in message and message['command'] == 'add':
 					Notifications().register(websocket, message['id'])
+					idlist.add(message['id'])
 				elif "command" in message and message['command'] == 'delete': 
 					Notifications().unregister(websocket, message['id'])
+					idlist.discard(message['id'])
 				else:
 					await Notifications().addNotification(message['id'], message) 
 			except Exception as e:
@@ -134,6 +141,7 @@ async def websockethandler(websocket, path):
 		print('closing', idlist)
 		for myid in idlist:
 			Notifications().unregister(websocket, myid)
+		Notifications().closeconnection(websocket)
 		websocket.close()
 
 

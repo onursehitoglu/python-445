@@ -74,6 +74,14 @@ function sellEntry(ael) {
 	var op = { id: eid, op: 'sell', user: username};
 	updater.socket.send(JSON.stringify(op));
 }
+function shownotification(notifymess, error = false) {
+	var newmess = $(`<div class="ntfymess">${notifymess}</div>`);
+	$("#notification").append(newmess);
+	newmess.css('background-color',(error)?"#ffa0a0":"#a0a0ff");
+	newmess.fadeIn().delay(3000).fadeOut();
+	setTimeout(() => { newmess.remove();}, 4000);
+}
+
 
 var updater = {  // web socket object gets updatemodel requests
     socket: null,
@@ -95,19 +103,12 @@ var updater = {  // web socket object gets updatemodel requests
 		console.log(op.message);
 		if (op.error) {  // notification color based on error or success
 			notifymess = op.error;
-			notifybg = "#ffa0a0";
 		} else {
 			notifymess = op.message;
-			notifybg = "#a0a0ff";
 		}
+	    	shownotification(notifymess, op.error);
 	
 		// show notification message coming from server bottom right
-		$("#notification").text(notifymess)
-						  .css({position: "absolute", bottom: "5px", 
-								right: "5px", padding: "15px", "border-radius": "8px",
-								"box-shadow": "4px 4px 2px #808080", 'background-color': notifybg })
-					      .fadeIn().delay(3000).slideUp(); // show for 3 seconds and disappear
-
 		if (op.change) {  // if model on HTML changes
 			switch (op.change.op) {
 			case "add": 		// someone inserted a new entry
