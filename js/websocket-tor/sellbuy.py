@@ -45,6 +45,8 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 	entries = {}
 	users = {}
 
+
+
 	def get_compression_options(self):
 		# Non-None enables compression with default options.
 		return {}
@@ -54,6 +56,9 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
 	def on_close(self):
 		ChatSocketHandler.waiters.remove(self)
+
+	def check_origin(self, orig):
+		return True
 
 	@classmethod
 	def handle_message(cls, operation, mop):

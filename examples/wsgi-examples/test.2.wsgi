@@ -19,7 +19,11 @@ def application(environ, start_response):
 			Name <input type="text" name="name"/>
 			Surname <input type="text" name="sname"/>
 			<input type="submit" name="submit" value="Send"/>
-		 </form>'''
+		 </form>
+	<p>
+	This example shows how to transfer states through cookies. counter cookie is
+    shown below and incremented each time this page is loaded</p>
+'''
 
 	# implement state transfer with cookies load cookie
 	cookie = SimpleCookie()

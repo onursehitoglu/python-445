@@ -17,7 +17,9 @@ def application(environ, start_response):
 			Name <input type="text" name="name"/>
 			Surname <input type="text" name="sname"/>
 			<input type="submit" name="submit" value="Send"/>
-		 </form>'''
+		 </form>
+
+	 <p> This example shows how to get user input from WSGI.'''
 
 	# body.format("message") will return html with message after Hello
 
@@ -45,6 +47,7 @@ def application(environ, start_response):
 
 	start_response(status, response_headers)
 
+	# GENERATOR version. Yields all text parts as bytes values
 	yield response_body.encode()
 	for i in environ:
 		 yield "<strong>{}:</strong> {}<br/>\n".format(i,environ[i]).encode()

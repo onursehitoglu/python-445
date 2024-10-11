@@ -22,7 +22,11 @@ def application(environ, start_response):
 			<input type="hidden" name="counter" value="{}"/>
 
 			<input type="submit" name="submit" value="Send"/>
-		 </form>'''
+		 </form>
+
+		<p> This example shows how to pass state or other information
+            in a hidden variable. Counter value us passed in the form (see
+	page source, hidden field.</p>'''
 
 
 	if environ['REQUEST_METHOD'] == 'GET':
