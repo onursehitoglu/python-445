@@ -1,5 +1,6 @@
-<html>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+{% spaceless %}
 <form method="post" action="/{{ action }}">
 {% comment %} uses form facility as_p() to render form {% endcomment %}
 
@@ -18,5 +19,5 @@
 {% comment %} picks button text based on form, update or add {% endcomment %}
 <input type="submit" name="add" value="{{ button }}"/>
 </form>
-</body>
-</html>
+{% endspaceless %}
+{% endblock %}
