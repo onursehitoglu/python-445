@@ -1,7 +1,10 @@
 #!/usr/bin/python
+from websockets.sync import server
+from websockets.exceptions	import ConnectionClosedError,ConnectionClosedOK
 
 from threading import Thread,Lock,Condition
 import socket
+import json
 import sys
 
 class Chat:
@@ -12,7 +15,7 @@ class Chat:
 	def newmessage(self,mess):
 		self.lock.acquire()
 		self.buf.append(mess)
-		self.newmess.notifyAll()
+		self.newmess.notify_all()
 		self.lock.release()
 	def getmessages(self,after=0):
 		self.lock.acquire()
@@ -23,46 +26,34 @@ class Chat:
 		self.lock.release()
 		return a
 		
-		
-	
-
-class RDAgent(Thread):
-	def __init__(self, conn, addr, chat):
-		self.conn = conn
-		self.claddr = addr
-		self.chat = chat
-		Thread.__init__(self)
-	def run(self):
-		inp = self.conn.recv(1024)
-		while inp:
-			self.chat.newmessage(inp)
-			print('waiting next',self.claddr)
-			inp = self.conn.recv(1024)
-		print('client is terminating')
-		conn.close()
-
-class WRAgent(Thread):
-	def __init__(self, conn, addr, chat):
-		self.conn = conn
-		self.claddr = addr
+class NotifierAgent(Thread):
+	def __init__(self, sock, chat):
+		self.sock = sock
 		self.chat = chat
 		self.current = 0
+		self.notexit = True
 		Thread.__init__(self)
 	def run(self):
 		oldmess = self.chat.getmessages()
 		self.current += len(oldmess)
-		self.conn.send('\n'.join([i.decode() for i in oldmess]).encode())
-		notexit = True
-		while notexit:
+		self.sock.send(json.dumps(oldmess))
+		while self.notexit:
 			self.chat.lock.acquire()
 			self.chat.newmess.wait()
 			self.chat.lock.release()
 			oldmess = self.chat.getmessages(self.current)
+			if len(oldmess) == 0:
+				continue
 			self.current += len(oldmess)
 			try:
-			  self.conn.send('\n'.join([i.decode() for i in oldmess]).encode())
+			  self.sock.send(json.dumps(oldmess))
 			except:
-			  notexit = False
+			  self.notexit = False
+	def terminate():
+		self.notexit = False
+		self.chat.lock.acquire()
+		self.newmess.notify_all()
+		self.chat.lock.release()
 			
 
 if len(sys.argv) != 2:
@@ -72,20 +63,43 @@ if len(sys.argv) != 2:
 
 HOST = ''         
 PORT = int(sys.argv[1] )
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(1)
+#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#s.bind((HOST, PORT))
+#s.listen(1)
 
 chatroom = Chat()
 
+def Agent(sock):
+	global chatroom
 
-while True:
-	conn, addr = s.accept()
+	rdr = NotifierAgent(sock,chatroom)
+	rdr.start() 
+	
+	try:
+		while True:
+			inp = sock.recv()
+			mess = json.loads(inp)
+			print(mess)
+			if 'message' in mess: chatroom.newmessage(mess['message'])
+	except ConnectionClosedOK:
+		print('client is terminating')
+	except ConnectionClosedOK:
+		print('client generated error')
 
-	print('Connected by', addr)
-	a = RDAgent(conn,addr,chatroom)
-	b = WRAgent(conn,addr,chatroom)
-	a.start()
-	b.start()
+	sock.close()
+	rdr.terminate()
+
+
+srv =  server.serve(Agent, host=HOST, port=PORT) 
+print(dir(srv))
+srv.serve_forever()
+#while True:
+#	conn, addr = s.accept()
+#
+#	print('Connected by', addr)
+#	a = RDAgent(conn,addr,chatroom)
+#	b = WRAgent(conn,addr,chatroom)
+#	a.start()
+#	b.start()
 
 
