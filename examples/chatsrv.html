@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>WebSocket demo</title>
+    </head>
+    <body>
+        <script>
+		document.body.onload = () => {
+		const websocket = new WebSocket("ws://localhost:10000/");
+		const messages = document.querySelector("#messages");
+		const inp = document.querySelector("input");
+  		websocket.onmessage = ({ data }) => {
+			for (mess of JSON.parse(data)) {
+    			const message = document.createElement("li");
+				console.log(mess);
+			    const content = document.createElement('span');
+				const peer = `<${mess.sender[0]},${mess.sender[1]}>`;
+			    content.innerHTML = `<b>${peer}:</b>${mess.message}`;
+    			message.appendChild(content);
+    			messages.appendChild(message);
+			}
+  		};
+		inp.addEventListener("keyup", ({key}) => {
+			if (key === "Enter") {
+				websocket.send(JSON.stringify({message:inp.value}));
+			}
+		})
+	}
+	</script>
+	<input type="text" name="inputmess">
+	<ul id="messages">
+	<ul>
+    </body>
+</html>
