@@ -54,7 +54,7 @@
 \begin{frame}
 \frametitle{Introduction}
 \begin{itemize}
-\item Idea initiated in early 90's for colloboration over Internet.
+\item Idea initiated in early 90's for collaboration over Internet.
 \item World-wide-web: in general meaning applications with document access arround Internet
 \item specifically: technologies arround \structure{HTTP} and \structure{HTML}
 \item HyperText Transmission Protocol: A protocol to transmit documents
@@ -401,19 +401,191 @@ his history in \lstinline!xshopx.com!.
 \begin{frame}[fragile]
 \frametitle{Setting session}
 \begin{enumerate}
-\item If no session variable is set (\lstinline!Cookie! header):
+\item If no valid session variable is set (\lstinline!Cookie! header):
 \begin{enumerate}
-	\item Show login page and authenticate
-	\item On authentication response, set session cookie
-			(\lstinline!Set-Cookie!, give a random id and save on database)
+	\item Show/redirect login page and authentication form.
+	\item On authentication form post, set session cookie\\
+			(\lstinline!Set-Cookie! header, give a random id and save on database)
 	\item redirect to original page (\lstinline!302 Found! result, \lstinline!Location! header in HTTP response)
 \end{enumerate}
-\item If session variable is set, load the sesion variable and state
-	from database
+\item If session variable is set, load the session state from database
 \end{enumerate}
 \end{frame}
 
+\section{Model View Controller}
+\begin{frame}[fragile]
+\frametitle{Model View Controller}
 
+\begin{itemize}
+\item \structure{Model}: current state of the application. Usually kept on database for Web applications.
+\item \structure{View}: the HTML page displayed by the browser.
+\item \structure{Controller}: Handlers of form element actions.
+\item Interactions:
+\begin{itemize}
+	\item Page load $\rightarrow$ View generates HTML from model.
+	\item User action $\rightarrow$ Controller (action handler) updates the model
+	\item Model updated $\rightarrow$ View generates/updates the page 
+	\item Without Javascript, all runs on the server side and requires page reload for updated view.
+\end{itemize}
+\item Separating look and feel from application logic, View and Controller. \structure{Template Engines} help.
+\item SQL vs class Interface for accessing the model. \structure{Object Relational Mapping}.
+\end{itemize}
+\end{frame}
+
+
+\section{RESTful API}
+\begin{frame}[fragile]
+\frametitle{RESTful API}
+\begin{itemize}
+\item \structure{Re}presentational \structure{S}tate \structure{Transfer}
+\item Not specific to HTTP, but is naturally applies to HTTP.
+\item Principles:
+	\begin{itemize}
+	\item Uniform interface
+	\item Client-server
+	\item Stateless
+	\item Cacheable
+	\item Layered
+	\item Code on demand (optional)
+	\end{itemize}
+\item RESTful is an architecture designed for simplicity, scalability and inter-operability
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Principles}
+\begin{itemize}
+\item \structure{Uniform interface}
+\begin{itemize}
+\item Resource addresses with URIs (ie. HTTP URIs)
+\item Similar methods for manipulation and access (HTTP methods, GET, PUT, POST,...)
+\item Self descripted content (Clean URIs and XML, JSON like response).
+\item Hyperlinked data. References returned as hyperlinks.
+\end{itemize}
+\item \structure{Stateless}
+\begin{itemize}
+\item Each request contains all necessary information to execute an action
+\item Response does not rely on history of action or a state from the component
+\item Server does not have to store state.
+\item No need to recover states on failure.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item \structure{Client-Server}
+\begin{itemize}
+\item Seperation of concerns
+\item Model and business logic on the server
+\item Presentation in the client
+\end{itemize}
+\item \structure{Cacheable}
+\begin{itemize}
+\item Cacheability is marked in the response with expiration
+\item Client can use cached copy during the specified period.
+\item Intermediate layers and client can support cache
+\end{itemize}
+\item \structure{Layered System}
+\begin{itemize}
+\item There might be multiple layers in the system
+\item A component cannot know if a response is direct or goes through layers
+\end{itemize}
+\item \structure{Code on Demand}
+\begin{itemize}
+\item Optional. Response can include scripts, code and links.
+\item ie. An HTML/Javascript with data, video player link with stream URI.
+\item Security issues
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{HTTP RESTful}
+\begin{itemize}
+\item Use clean URIs. ie \texttt{http://example.com/category/id} stands for \texttt{id} in \texttt{category}
+\item HTTP methods can be mapped on uniform operations:\\
+	\structure{GET} for retrieve, \structure{POST} for create, \structure{PUT} for update, \structure{DELETE} for delete
+\item Return a structured and readable format like XML or JSON. Return meaningful field names.
+\item Return URIs for hyperlinking other resources
+\item Example: \texttt{GET http://example.com/student/123415}
+\begin{lstlisting}[language=HTML, basicstyle=\scriptsize\ttfamily]
+    { "sid": "123415",
+        "name": "John",
+        "surname": "Doe",
+        "department": "http://example.com/departments/571/",
+        "registered": [
+            "http://example.com/courses/ceng315/",
+            "http://example.com/courses/ceng350/" ],
+    }
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item use JSON or XML representation in \structure{POST} and \structure{PUT} methods
+\item Return cacheability and expiration \structure{Cache-control} or \structure{Expires} headers
+	in HTTP.
+\item Error handling: Use appropriate HTTP result codes (200 success, 403 forbidden, 404 not found, 5xx server erros)
+\item Provide details in a uniform object as:
+\begin{lstlisting}[language=HTML, basicstyle=\scriptsize\ttfamily]
+404 Not Found
+Content-Type: application/json
+
+{ "instance" : "/students/123123",
+  "detail" : "student id does not exist"  
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+\item
+\begin{lstlisting}[language=HTML, basicstyle=\scriptsize\ttfamily]
+POST /student/12314
+Content-Type: application/json
+
+{  "name": "Onur Tolga", "surname": "Sehitoglu",
+   "department": 599, "email": "onur@ex@mple.com@tr"
+}
+------
+403 Invalid Form
+Content-Type: application/json
+
+{ "instance" : "/students/12314",
+  "detail" : "student information is not valid",
+  "errors": [ {"field": "department", 
+                "issue": "no such department"},
+              {"field": "email", 
+               "issue": "invalid email format"}],  
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{REST API Authentication}
+\begin{itemize}
+\item \structure{Stateless} and \structure{Session} contradicts by definition.
+\item Cookies and plain HTTP authentication can be used in human/browser clients
+\item Scripts and machine to machine interface is different
+\item A typical scenario can be:
+\begin{itemize}
+	\item Ask for an authentication token, provide credentials, passwords, signed challenge etc.
+    \item Server sends a token, valid in a period
+	\item All following requests include the token either as a cookie or HTTP header.
+\end{itemize}
+\item The security of authentication token is an issue. (hijacking)
+\item For a full stateless operation:
+\begin{itemize}
+	\item server stores client public key
+	\item Client signs all requests (body and URI) and includes in a header
+	\item Server validates signatures before each requests
+\end{itemize}
+\end{itemize}
+\end{frame}
 
 
 \end{document}
