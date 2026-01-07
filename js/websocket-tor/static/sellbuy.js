@@ -87,6 +87,7 @@ var updater = {  // web socket object gets updatemodel requests
     socket: null,
 
     start: function() {
+        //var url = "wss://" + location.host + "/chatsocket";
         var url = "ws://" + location.host + "/chatsocket";
         updater.socket = new WebSocket(url);
         updater.socket.onmessage = function(event) {

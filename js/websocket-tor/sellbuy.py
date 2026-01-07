@@ -11,10 +11,12 @@ import tornado.web
 import tornado.websocket
 import os.path
 import uuid
+import ssl
 
 from tornado.options import define, options
+from tornado.httpserver import HTTPServer
 
-define("port", default=8800, help="run on the given port", type=int)
+define("port", default=9000, help="run on the given port", type=int)
 
 
 class Application(tornado.web.Application):
@@ -137,7 +139,12 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 def main():
 	tornado.options.parse_command_line()
 	app = Application()
-	app.listen(options.port)
+	#ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+	#ssl_ctx.load_cert_chain("/etc/ssl/certs/ssl-cert-snakeoil.pem",
+    #                    "/home/onur/onur/445/samples/python-445/js/websocket-tor/ssl-cert-snakeoil.key")
+	#server = HTTPServer(app, ssl_options=ssl_ctx)
+	server = HTTPServer(app)
+	server.listen(options.port)
 	tornado.ioloop.IOLoop.current().start()
 
 
