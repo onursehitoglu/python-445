@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>QuadTree Test Code</title>
+    <style>
+	h2,p,span {
+		font-family: sans;
+	}
+	#wmap { 
+		border: 1pt solid black;
+	}
+	#citylist {
+		font: 10px sans;
+		background-color: rgba(150,200,255,100);
+		padding: 10px;
+	}</style>
+  </head>
+  <body>
+    <script type="text/javascript" src="quadtree.js"></script>
+	<script>
+	const capitals= [[34.5289, 69.1725, "Kabul"], [41.3275, 19.8189, "Tirana"], [36.7525, 3.0420, "Algiers"], [42.5078, 1.5211, "Andorra la Vella"], [-8.8368, 13.2343, "Luanda"], [17.1172, -61.8457, "St. John's"], [-34.6051, -58.4004, "Buenos Aires"], [40.1820, 44.5146, "Yerevan"], [-35.2835, 149.1281, "Canberra"], [48.2064, 16.3707, "Vienna"], [40.3777, 49.8920, "Baku"], [25.0582, -77.3431, "Nassau"], [26.2154, 50.5832, "Manama"], [23.7104, 90.4074, "Dhaka"], [13.1000, -59.6167, "Bridgetown"], [53.9000, 27.5667, "Minsk"], [50.8467, 4.3499, "Brussels"], [17.2500, -88.7667, "Belmopan"], [6.4969, 2.6289, "Porto-Novo"], [27.4661, 89.6419, "Thimphu"],
+[-16.5000, -68.1500, "La Paz"], [43.8486, 18.3564, "Sarajevo"], [-24.6545, 25.9086, "Gaborone"], [-15.7797, -47.9297, "Brasilia"], [4.9403, 114.9481, "Bandar Seri Begawan"], [42.6975, 23.3242, "Sofia"], [12.3642, -1.5383, "Ouagadougou"], [-3.3822, 29.3644, "Bujumbura"], [11.5625, 104.9160, "Phnom Penh"], [3.8667, 11.5167, "Yaounde"], [45.4166, -75.6980, "Ottawa"], [14.9215, -23.5087, "Praia"], [4.3612, 18.5550, "Bangui"], [12.1067, 15.0444, "N'Djamena"], [-33.4569, -70.6483, "Santiago"], [39.9075, 116.3972, "Beijing"], [4.6097, -74.0818, "Bogota"], [-11.7022, 43.2551, "Moroni"], [-4.2658, 15.2832, "Brazzaville"], [-4.3276, 15.3136, "Kinshasa"],
+[9.9278, -84.0807, "San Jose"], [45.8144, 15.9780, "Zagreb"], [23.1195, -82.3785, "Havana"], [35.1595, 33.3669, "Nicosia"], [50.0880, 14.4208, "Prague"], [55.6759, 12.5655, "Copenhagen"], [11.5877, 43.1447, "Djibouti"], [15.3017, -61.3881, "Roseau"], [18.4896, -69.9018, "Santo Domingo"], [-0.2299, -78.5250, "Quito"], [30.0392, 31.2394, "Cairo"], [13.6894, -89.1872, "San Salvador"], [3.7500, 8.7833, "Malabo"], [15.3333, 38.9333, "Asmara"], [59.4370, 24.7535, "Tallinn"], [-26.3055, 31.1367, "Mbabane"], [9.0250, 38.7469, "Addis Ababa"], [-18.1416, 178.4415, "Suva"], [60.1692, 24.9402, "Helsinki"], [48.8534, 2.3488, "Paris"],
+[0.3833, 9.4500, "Libreville"], [13.4500, -16.5667, "Banjul"], [41.7151, 44.8271, "Tbilisi"], [52.5200, 13.4050, "Berlin"], [5.5500, -0.1969, "Accra"], [37.9838, 23.7275, "Athens"], [12.0500, -61.7500, "St. George's"], [14.6333, -90.5000, "Guatemala City"], [9.5167, -13.7000, "Conakry"], [11.8500, -15.5667, "Bissau"], [6.8000, -58.1500, "Georgetown"], [18.5333, -72.3333, "Port-au-Prince"], [14.0667, -87.2167, "Tegucigalpa"], [47.4979, 19.0402, "Budapest"], [64.1265, -21.8174, "Reykjavik"], [28.6139, 77.2090, "New Delhi"], [-6.2088, 106.8456, "Jakarta"], [35.6892, 51.3890, "Tehran"], [33.2232, 43.6793, "Baghdad"], [53.3498, -6.2603, "Dublin"],
+[31.7683, 35.2137, "Jerusalem"], [41.8719, 12.5674, "Rome"], [17.9714, -76.7936, "Kingston"], [36.2048, 138.2529, "Tokyo"], [31.9566, 35.9457, "Amman"], [51.1605, 71.4704, "Astana"], [-1.2921, 36.8219, "Nairobi"], [1.4518, 172.9717, "Tarawa"], [29.3759, 47.9774, "Kuwait City"], [42.8746, 74.5698, "Bishkek"], [17.9757, 102.6331, "Vientiane"], [56.9496, 24.1052, "Riga"], [33.8938, 35.5018, "Beirut"], [-29.3167, 27.4833, "Maseru"], [6.3005, -10.7969, "Monrovia"], [32.8872, 13.1913, "Tripoli"], [47.0910, 9.5209, "Vaduz"], [54.6872, 25.2797, "Vilnius"], [49.6116, 6.1319, "Luxembourg"], [-18.8792, 47.5079, "Antananarivo"],
+[-13.9667, 33.7833, "Lilongwe"], [3.1390, 101.6869, "Kuala Lumpur"], [4.1755, 73.5093, "Male"], [12.6392, -8.0029, "Bamako"], [35.8989, 14.5146, "Valletta"], [7.1130, 171.3790, "Majuro"], [18.0858, -15.9785, "Nouakchott"], [-20.1609, 57.5012, "Port Louis"], [19.4326, -99.1332, "Mexico City"], [47.0105, 28.8638, "Chisinau"], [43.7333, 7.4167, "Monaco"], [47.8864, 106.9057, "Ulaanbaatar"], [42.4304, 19.2594, "Podgorica"], [34.0209, -6.8416, "Rabat"], [-25.9692, 32.5732, "Maputo"], [19.7417, 96.1100, "Naypyidaw"], [-22.5609, 17.0658, "Windhoek"], [27.7172, 85.3240, "Kathmandu"], [52.3676, 4.9041, "Amsterdam"], [-41.2865, 174.7762, "Wellington"],
+[12.1150, -86.2361, "Managua"], [13.5116, 2.1254, "Niamey"], [9.0765, 7.3986, "Abuja"], [39.0339, 125.7543, "Pyongyang"], [42.0000, 21.4333, "Skopje"], [59.9139, 10.7522, "Oslo"], [23.5859, 58.4059, "Muscat"], [33.6844, 73.0479, "Islamabad"], [7.5000, 134.6167, "Ngerulmud"], [8.9833, -79.5167, "Panama City"], [-9.4431, 147.1825, "Port Moresby"], [-25.2637, -57.5759, "Asuncion"], [-12.0464, -77.0428, "Lima"], [14.5995, 120.9842, "Manila"], [52.2297, 21.0122, "Warsaw"], [38.7223, -9.1393, "Lisbon"], [25.2854, 51.5310, "Doha"], [44.4268, 26.1025, "Bucharest"], [55.7558, 37.6173, "Moscow"], [-1.9403, 30.0588, "Kigali"],
+[17.3000, -62.7167, "Basseterre"], [14.0167, -61.0000, "Castries"], [13.1583, -61.2250, "Kingstown"], [-13.8333, -171.7667, "Apia"], [43.9333, 12.4500, "San Marino"], [0.3302, 6.7333, "Sao Tome"], [24.7136, 46.6753, "Riyadh"], [14.7167, -17.4667, "Dakar"], [44.7866, 20.4489, "Belgrade"], [-4.6167, 55.4500, "Victoria"], [8.4844, -13.2344, "Freetown"], [1.3521, 103.8198, "Singapore"], [48.1486, 17.1077, "Bratislava"], [46.0569, 14.5058, "Ljubljana"], [-9.4333, 159.9500, "Honiara"], [2.0408, 45.3362, "Mogadishu"], [-25.7479, 28.2293, "Pretoria"], [37.5665, 126.9780, "Seoul"], [4.8500, 31.6000, "Juba"], [40.4168, -3.7038, "Madrid"],
+[6.9213, 79.8612, "Colombo"], [15.5007, 32.5599, "Khartoum"], [5.8520, -55.2038, "Paramaribo"], [59.3293, 18.0686, "Stockholm"], [46.9480, 7.4474, "Bern"], [33.5138, 36.2765, "Damascus"], [38.5598, 68.7870, "Dushanbe"], [-6.1630, 35.7516, "Dodoma"], [13.7563, 100.5018, "Bangkok"], [6.1167, 1.2333, "Lome"], [-21.1333, -175.2000, "Nuku'alofa"], [10.6667, -61.5167, "Port of Spain"], [36.8065, 10.1815, "Tunis"], [39.9334, 32.8597, "Ankara"], [37.9500, 58.3833, "Ashgabat"], [-8.5333, 179.1917, "Funafuti"], [0.3163, 32.5822, "Kampala"], [50.4501, 30.5234, "Kyiv"], [24.4539, 54.3773, "Abu Dhabi"], [51.5074, -0.1278, "London"],
+[38.8951, -77.0364, "Washington D.C."], [-34.8335, -56.1674, "Montevideo"], [41.2647, 69.2401, "Tashkent"], [-17.7333, 168.3273, "Port Vila"], [41.9029, 12.4534, "Vatican City"], [10.4806, -66.9036, "Caracas"], [21.0285, 105.8542, "Hanoi"], [15.3500, 44.2000, "Sana'a"], [-15.4167, 28.2833, "Lusaka"], [-17.8252, 31.0335, "Harare"]]
+
+	// insert cities with location and names in quadtree
+	function insertcities(tree) {
+		for (entry of capitals) {
+			tree.insert(entry[0], entry[1], entry[2]);
+		} 
+	}
+
+	// given a point in canvas, find the lat,long
+	function revnormalize(x,y, w,h) {
+		var tx = x*360/w
+		var ty = y*360/h
+		tx = tx-180
+		ty = 180-ty
+		return { lat: ty, lon: tx }
+	}
+	
+	// given a rectangle in canvas, find the rectangle in lat,lon
+	function georect(x1,y1, x2,y2, w, h) {
+		let c1 = revnormalize(x1,y1, w, h)
+		let c2 = revnormalize(x2,y2, w, h)
+		return { lat1: Math.min(c1.lat, c2.lat),
+			  lon1: Math.min(c1.lon, c2.lon),
+			  lat2: Math.max(c1.lat, c2.lat),
+			  lon2: Math.max(c1.lon, c2.lon)}
+	}
+
+	// given a coordinate, find the point in canvas
+	function normalize(lat,lon, w,h) {
+		var tx = 180+ lon
+		var ty = 180 -lat
+		tx = tx*w/360 | 0		
+		ty = ty*h/360 | 0
+		return { x: tx, y:ty }
+	}
+
+	// draw the points in capitals on canvas cv
+	function drawpoints(cv) {
+		var w = cv.width
+		var h = cv.height
+		var cc = cv.getContext("2d")
+		//cc.font = "5px Arial"
+		cc.strokeStyle="green"
+		for (var entry of capitals) {
+			var pixel = normalize(entry[0],entry[1], w, h)
+			cc.beginPath()
+			cc.arc(pixel.x, pixel.y, 1, 0, 2*Math.PI)
+			cc.stroke()
+			//cc.fillText(entry[2], pixel.x, pixel.y)
+		}
+	}
+
+	// run when the document is ready
+	window.onload =  (event) => {
+		var cv = document.getElementById("wmap")
+		const ctx = cv.getContext('2d');
+		var cities
+
+		let isSelecting = false;
+		let startX, startY;
+		let selectionRect = { x: 0, y: 0, width: 0, height: 0 };
+
+		// Callback function to handle the final selection
+		const onSelect = (rect) => {
+			let r = georect(rect.x, rect.y, rect.x+rect.width, rect.y+rect.height, cv.width, cv.height)
+			let qres = cities.query(r.lat1, r.lon1, r.lat2, r.lon2)
+			let citylist = []
+			for (let i = 0; i < qres.size(); i++) {
+				citylist.push(qres.get(i).title)
+			}
+			console.log(r,citylist)
+			document.getElementById("citylist").innerHTML = citylist.join(", ")
+		};
+
+		// remember the first point at start of the drag
+		cv.addEventListener('mousedown', (e) => {
+    		isSelecting = true;
+    		startX = e.offsetX;
+    		startY = e.offsetY;
+		});
+
+		// draw the area rectangle during the drag
+		cv.addEventListener('mousemove', (e) => {
+    		if (!isSelecting) return;
+
+    		// Calculate dimensions (supports dragging in any direction)
+    		selectionRect.x = Math.min(startX, e.offsetX);
+    		selectionRect.y = Math.min(startY, e.offsetY);
+    		selectionRect.width = Math.abs(e.offsetX - startX);
+    		selectionRect.height = Math.abs(e.offsetY - startY);
+
+    		drawSelection();
+		});
+
+		// handle end of drag
+		cv.addEventListener('mouseup', () => {
+    		if (!isSelecting) return;
+    		isSelecting = false;
+    
+    		// Perform final callback
+    		onSelect(selectionRect);
+    
+    		// Clear the selection box from canvas (optional)
+    		ctx.clearRect(0, 0, cv.width, cv.height);
+			drawpoints(cv)
+		});
+
+
+		// draw the rectangle of the drag
+		function drawSelection() {
+    		// Clear canvas and redraw scene if necessary
+    		ctx.clearRect(0, 0, cv.width, cv.height); 
+    
+    		// Draw the selection rectangle
+    		ctx.setLineDash([5, 5]); // Dashed line effect
+    		ctx.strokeStyle = '#0078d7';
+    		ctx.lineWidth = 1;
+    		ctx.strokeRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+    
+    		// Semi-transparent fill
+    		ctx.fillStyle = 'rgba(0, 120, 215, 0.2)';
+    		ctx.fillRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+			// refresh points on the map
+			drawpoints(cv)
+		}
+
+		// draw the points on the map
+		drawpoints(cv)
+
+		// start when quadtree.js is loaded successfully
+		Module.onRuntimeInitialized = () => {
+			cities = new Module.QuadTree(-180,-180, 180,180)
+			insertcities(cities)
+		}
+	}
+</script>
+	<h2>Capital cities on the world map</h2>
+	<p>QuadTree demo. A QuadTree implementation written in C++ is compiled into wasm using emscripten/embind.
+	Select a region for a QuadTree query.</p>
+	<canvas id="wmap" width="800" height="600"></canvas>
+	<br/>
+	<span>Capital cities in the area:</span>
+	<br/>
+	<div id="citylist"></div>
+  </body>
+</html>

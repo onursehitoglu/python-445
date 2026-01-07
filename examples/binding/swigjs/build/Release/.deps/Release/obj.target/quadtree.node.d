@@ -1,0 +1,1 @@
+cmd_Release/obj.target/quadtree.node := g++ -o Release/obj.target/quadtree.node -shared -pthread -rdynamic -m64  -Wl,-soname=quadtree.node -Wl,--start-group Release/obj.target/quadtree/QuadTree_wrap.o Release/obj.target/quadtree/QuadTree.o -Wl,--end-group -lnode

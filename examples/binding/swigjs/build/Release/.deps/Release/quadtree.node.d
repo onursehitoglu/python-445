@@ -1,0 +1,1 @@
+cmd_Release/quadtree.node := ln -f "Release/obj.target/quadtree.node" "Release/quadtree.node" 2>/dev/null || (rm -rf "Release/quadtree.node" && cp -af "Release/obj.target/quadtree.node" "Release/quadtree.node")
