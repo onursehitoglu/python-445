@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket demo</title>
+    </head>
+    <body>
+		<div id="status" style="background-color: #ffa0a0;">not connected</div>
+		</div>
+		<div style="width:400px; display:inline-block; vertical-align:top">
+		<input id="newmess" value="" onKeyPress="sendenter(event,addMess);"/><button onClick="addMess();">Send</button></br>
+
+		<ul id='messagelist'>
+		</ul>
+		<div>
+        <script>
+		var serveripport = '127.0.0.1:5678'
+		function sendenter(e, f) {
+			if (e.keyCode == 13) { f();}
+			return false;
+		}
+		function addMess() {
+			var el = document.getElementById('newmess');
+			var m = {message: el.value};
+			ws.socket.send(JSON.stringify(m));
+			el.value = "";
+		}
+		class Ws  {
+		constructor(wids = []) {
+			this.waitids = wids;
+			var status = document.getElementById('status');
+			// create a web socket
+        	this.socket = new WebSocket('ws://' + serveripport);
+			var socket = this.socket
+			socket.onopen = function() {
+				// send id list for notifications
+				socket.send(JSON.stringify(wids));
+				status.textContent = 'Connected';
+				status.setAttribute('style','background-color: #a0ffa0');
+			}
+			socket.onerror = function() {
+				status.textContent = 'Connection failed';
+				status.setAttribute('style','background-color: #ffa0a0');
+			}
+			socket.onclose = function() {
+				status.textContent = 'Connection closed';
+				status.setAttribute('style','background-color: #ffa0a0');
+			}
+
+			socket.onmessage = function (event)  {
+				var messages = JSON.parse(event.data);
+				console.log(messages)
+				if (!Array.isArray(messages)) {
+					messages = [messages];
+				}
+				for ( var mid in messages) {
+            		var messlist = document.getElementById('messagelist'),
+            		messitem = document.createElement('li');
+					messitem.innerHTML =  messages[mid]
+            		messlist.appendChild(messitem);
+				};
+			}
+		}}
+		var ws = new Ws();
+        </script>
+    </body>
+</html>
